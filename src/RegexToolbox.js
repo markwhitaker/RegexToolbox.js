@@ -1,7 +1,7 @@
 "use strict";
 
 var RegexQuantifier = function(regexString) {
-    if (!regexString instanceof String) {
+    if (!(typeof(regexString) === "string" || regexString instanceof String)) {
         throw new Error("regexString must be a String");
     }
 
@@ -31,33 +31,18 @@ RegexQuantifier.oneOrMore = new RegexQuantifier("+");
 RegexQuantifier.noneOrOne = new RegexQuantifier("?");
 
 RegexQuantifier.exactly = function(times) {
-    if (!times instanceof Number) {
-        throw new Error("times must be a Number");
-    }
     return new RegexQuantifier("{" + times + "}");
 };
 
 RegexQuantifier.atLeast = function(minimum) {
-    if (!minimum instanceof Number) {
-        throw new Error("minimum must be a Number");
-    }
     return new RegexQuantifier("{" + minimum + ",}");
 };
 
 RegexQuantifier.noMoreThan = function(maximum) {
-    if (!maximum instanceof Number) {
-        throw new Error("maximum must be a Number");
-    }
     return new RegexQuantifier("{0," + maximum + "}");
 };
 
 RegexQuantifier.between = function(minimum, maximum) {
-    if (!minimum instanceof Number) {
-        throw new Error("minimum must be a Number");
-    }
-    if (!maximum instanceof Number) {
-        throw new Error("maximum must be a Number");
-    }
     return new RegexQuantifier("{" + minimum + "," + maximum + "}");
 };
 
@@ -109,11 +94,16 @@ var RegexBuilder = function (parent) {
         if (!quantifier) {
             return;
         }
-        if (!quantifier instanceof RegexQuantifier) {
+        if (!(quantifier instanceof RegexQuantifier)) {
             throw new Error("quantifier must be a RegexQuantifier");
         }
         regexBuilder.stringBuilder += quantifier.toString();
     };
+
+    var isString = function(s) {
+        return typeof(s) === "string" || s instanceof String;
+    };
+
 
 
     // BUILD METHOD
@@ -134,7 +124,10 @@ var RegexBuilder = function (parent) {
     };
 
     this.regexText = function (text, quantifier) {
-        if (!text instanceof String) {
+        if (text === null || text === undefined || text.length === 0) {
+            return this;
+        }
+        if (!isString(text)) {
             throw new Error("text must be a String");
         }
         if (!quantifier) {
@@ -263,7 +256,10 @@ var RegexBuilder = function (parent) {
     };
 
     this.anyOf = function (textArray, quantifier) {
-        if (!textArray instanceof Array) {
+        if (textArray === null || textArray === undefined) {
+            return this;
+        }
+        if (!(textArray instanceof Array)) {
             return this.text(textArray, quantifier);
         }
         if (textArray.length === 1) {
@@ -273,7 +269,9 @@ var RegexBuilder = function (parent) {
             return this
                 .startNonCapturingGroup()
                 .regexText(textArray
-                    .map(makeSafeForRegex)
+                    .map(function(t){
+                        return makeSafeForRegex(t);
+                    })
                     .join("|")
                 )
                 .endGroup(quantifier);
@@ -310,11 +308,6 @@ var RegexBuilder = function (parent) {
 
     this.startNonCapturingGroup = function () {
         this.stringBuilder += "(?:";
-        return new RegexBuilder(this);
-    };
-
-    this.startNamedGroup = function (name) {
-        this.stringBuilder += "(?<" + name + ">";
         return new RegexBuilder(this);
     };
 
