@@ -1,3 +1,5 @@
+"use strict";
+
 var runAllTests = function(QUnit) {
 
     var Strings = {
