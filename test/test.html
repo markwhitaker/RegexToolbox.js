@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.4.0.css">
+	<title>RegexToolbox Unit Tests</title>
+</head>
+<body>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="../src/RegexToolbox.js"></script>
+<script src="https://code.jquery.com/qunit/qunit-2.4.0.js"></script>
+<script src="unit-tests.js"></script>
+<script>
+	runAllTests(QUnit);
+</script>
+<!--
+<div id="results"></div>
+
+<script src="../src/RegexToolbox.js"></script>
+<script>
+	var regex = new RegexBuilder()
+		.text(".hello", RegexQuantifier.oneOrMore)
+		.anyOf(["abc", "def"])
+		.startGroup()
+			.digit()
+			.uppercaseLetter()
+		.endGroup(RegexQuantifier.exactly(3))
+		.buildRegex();
+
+	document.getElementById("results").innerText = regex;
+</script>
+-->
+</body>
+</html>
