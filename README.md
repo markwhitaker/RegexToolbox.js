@@ -1,4 +1,4 @@
-![icon](Artwork/RegexToolbox-icon-100.png)
+![icon](artwork/RegexToolbox-icon-100.png)
 
 # Regex Toolbox
 
