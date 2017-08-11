@@ -58,6 +58,7 @@ var RegexBuilder = function (parent) {
         : "";
 
 
+
     // PRIVATE METHODS
 
     var makeSafeForRegex = function (text) {
@@ -115,6 +116,7 @@ var RegexBuilder = function (parent) {
 
         return new RegExp(this.stringBuilder);
     };
+
 
 
     // CHARACTER MATCHES
@@ -281,6 +283,7 @@ var RegexBuilder = function (parent) {
     };
 
 
+
     // ANCHORS (ZERO-WIDTH ASSERTIONS)
 
     this.startOfString = function () {
@@ -297,6 +300,7 @@ var RegexBuilder = function (parent) {
         this.stringBuilder += "\\b";
         return this;
     };
+
 
 
     // GROUPING
@@ -321,3 +325,4 @@ var RegexBuilder = function (parent) {
         return this.parent;
     };
 };
+
