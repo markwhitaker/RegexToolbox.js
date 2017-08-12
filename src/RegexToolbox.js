@@ -4,6 +4,11 @@
 
 // ---------- Extensions ----------
 
+/**
+ * Return true if the array contains the supplied item
+ * @param item  Item to find
+ * @returns {boolean}
+ */
 Array.prototype.has = function(item) {
     return this.indexOf(item) > -1;
 };
@@ -11,6 +16,15 @@ Array.prototype.has = function(item) {
 
 // ---------- RegexQuantifier ----------
 
+/**
+ * Quantifiers that can be applied to regex elements or groups.
+ * Don't call this directly: instead use the prototype properties and methods
+ * such as RegexQuantifier.zeroOrMore.
+ *
+ * @param regexString   A valid regex quantifier string
+ * @param greedy        Whether this quantifier is greedy
+ * @constructor
+ */
 var RegexQuantifier = function(regexString, greedy) {
     var validPattern = /(\*|\+|\?|{\d+}|{\d+,}|{\d+,\d+})\??/;
 
@@ -50,18 +64,39 @@ RegexQuantifier.oneOrMore = new RegexQuantifier("+", true);
  */
 RegexQuantifier.noneOrOne = new RegexQuantifier("?", true);
 
+/**
+ * Quantifier to match an exact number of occurrences of the preceding element
+ * @param times The exact number of occurrences to match
+ * @returns {RegexQuantifier}
+ */
 RegexQuantifier.exactly = function(times) {
     return new RegexQuantifier("{" + times + "}", false);
 };
 
+/**
+ * Quantifier to match at least a minimum number of occurrences of the preceding element
+ * @param minimum   The minimum number of occurrences to match
+ * @returns {RegexQuantifier}
+ */
 RegexQuantifier.atLeast = function(minimum) {
     return new RegexQuantifier("{" + minimum + ",}", true);
 };
 
+/**
+ * Quantifier to match no more than a maximum number of occurrences of the preceding element
+ * @param maximum   The maximum number of occurrences to match
+ * @returns {RegexQuantifier}
+ */
 RegexQuantifier.noMoreThan = function(maximum) {
     return new RegexQuantifier("{0," + maximum + "}", true);
 };
 
+/**
+ * Quantifier to match at least a minimum, and no more than a maximum, occurrences of the preceding element
+ * @param minimum   The minimum number of occurrences to match
+ * @param maximum   The maximum number of occurrences to match
+ * @returns {RegexQuantifier}
+ */
 RegexQuantifier.between = function(minimum, maximum) {
     return new RegexQuantifier("{" + minimum + "," + maximum + "}", true);
 };
@@ -78,6 +113,18 @@ var RegexOptions = {
 
 // ---------- RegexBuilder ----------
 
+/**
+ * Class to build regular expressions in a more human-readable way using a fluent API.
+ *
+ * To use, chain method calls representing the elements you want to match, and finish
+ * with buildRegex() to build the Regex. Example:
+ *
+ * var regex = new RegexBuilder()
+ *                 .text("cat")
+ *                 .endOfString()
+ *                 .buildRegex();
+ * @constructor
+ */
 var RegexBuilder = function () {
     var _openGroupCount = 0;
     var _regexString = "";
@@ -134,6 +181,13 @@ var RegexBuilder = function () {
 
     // BUILD METHOD
 
+    /**
+     * Build and return a Regex object from the current builder state.
+     * After calling this the builder is cleared and ready to re-use.
+     *
+     * @param options   Array of RegexOptions values to apply to the regex
+     * @returns {RegExp}
+     */
     this.buildRegex = function (options) {
         if (_openGroupCount === 1) {
             throw new Error("One group is still open");
@@ -158,7 +212,9 @@ var RegexBuilder = function () {
             }
         }
 
-        return new RegExp(_regexString, flags);
+        var regex = new RegExp(_regexString, flags);
+        _regexString = "";
+        return regex;
     };
 
 
