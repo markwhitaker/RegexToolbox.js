@@ -5,12 +5,10 @@ var RegexQuantifier = function(regexString) {
         throw new Error("regexString must be a String");
     }
 
-    this.regexString = regexString;
+    this.r = regexString;
 };
 
-RegexQuantifier.prototype.toString = function(){
-    return this.regexString;
-};
+
 
 /**
  * Quantifier to match the preceding element zero or more times
@@ -46,16 +44,9 @@ RegexQuantifier.between = function(minimum, maximum) {
     return new RegexQuantifier("{" + minimum + "," + maximum + "}");
 };
 
-var RegexBuilder = function (parent) {
-    if (parent && !(parent instanceof RegexBuilder)) {
-        throw new Error("parent must be a RegexBuilder object");
-    }
-
-    this.parent = parent;
-
-    this.stringBuilder = (this.parent && this.parent.stringBuilder)
-        ? this.parent.stringBuilder
-        : "";
+var RegexBuilder = function () {
+    var _openGroupCount = 0;
+    var _stringBuilder = "";
 
 
 
@@ -91,14 +82,14 @@ var RegexBuilder = function (parent) {
         return result;
     };
 
-    var addQuantifier = function (regexBuilder, quantifier) {
+    var addQuantifier = function (quantifier) {
         if (!quantifier) {
             return;
         }
         if (!(quantifier instanceof RegexQuantifier)) {
             throw new Error("quantifier must be a RegexQuantifier");
         }
-        regexBuilder.stringBuilder += quantifier.toString();
+        _stringBuilder += quantifier.r;
     };
 
     var isString = function(s) {
@@ -110,11 +101,14 @@ var RegexBuilder = function (parent) {
     // BUILD METHOD
 
     this.buildRegex = function () {
-        if (this.parent) {
-            throw new Error("At least one group is still open");
+        if (_openGroupCount === 1) {
+            throw new Error("One group is still open");
+        }
+        if (_openGroupCount > 1) {
+            throw new Error(_openGroupCount + "groups are still open");
         }
 
-        return new RegExp(this.stringBuilder);
+        return new RegExp(_stringBuilder);
     };
 
 
@@ -133,7 +127,7 @@ var RegexBuilder = function (parent) {
             throw new Error("text must be a String");
         }
         if (!quantifier) {
-            this.stringBuilder += text;
+            _stringBuilder += text;
             return this;
         }
 
@@ -144,116 +138,116 @@ var RegexBuilder = function (parent) {
     };
 
     this.anyCharacter = function (quantifier) {
-        this.stringBuilder += ".";
-        addQuantifier(this, quantifier);
+        _stringBuilder += ".";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.whitespace = function (quantifier) {
-        this.stringBuilder += "\\s";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "\\s";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.nonWhitespace = function (quantifier) {
-        this.stringBuilder += "\\S";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "\\S";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.digit = function (quantifier) {
-        this.stringBuilder += "\\d";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "\\d";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.nonDigit = function (quantifier) {
-        this.stringBuilder += "\\D";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "\\D";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.letter = function (quantifier) {
-        this.stringBuilder += "[a-zA-Z]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[a-zA-Z]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.nonLetter = function (quantifier) {
-        this.stringBuilder += "[^a-zA-Z]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[^a-zA-Z]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.uppercaseLetter = function (quantifier) {
-        this.stringBuilder += "[A-Z]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[A-Z]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.lowercaseLetter = function (quantifier) {
-        this.stringBuilder += "[a-z]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[a-z]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.letterOrDigit = function (quantifier) {
-        this.stringBuilder += "[a-zA-Z0-9]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[a-zA-Z0-9]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.nonLetterOrDigit = function (quantifier) {
-        this.stringBuilder += "[^a-zA-Z0-9]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[^a-zA-Z0-9]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.hexDigit = function (quantifier) {
-        this.stringBuilder += "[0-9A-Fa-f]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[0-9A-Fa-f]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.uppercaseHexDigit = function (quantifier) {
-        this.stringBuilder += "[0-9A-F]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[0-9A-F]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.lowercaseHexDigit = function (quantifier) {
-        this.stringBuilder += "[0-9a-f]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[0-9a-f]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.nonHexDigit = function (quantifier) {
-        this.stringBuilder += "[^0-9A-Fa-f]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[^0-9A-Fa-f]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.wordCharacter = function (quantifier) {
-        this.stringBuilder += "\\w";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "\\w";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.nonWordCharacter = function (quantifier) {
-        this.stringBuilder += "\\W";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "\\W";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.anyCharacterFrom = function (characters, quantifier) {
-        this.stringBuilder += "[" + makeSafeForCharacterClass(characters) + "]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[" + makeSafeForCharacterClass(characters) + "]";
+        addQuantifier(quantifier);
         return this;
     };
 
     this.anyCharacterExcept = function (characters, quantifier) {
-        this.stringBuilder += "[^" + makeSafeForCharacterClass(characters) + "]";
-        addQuantifier(this, quantifier);
+        _stringBuilder += "[^" + makeSafeForCharacterClass(characters) + "]";
+        addQuantifier(quantifier);
         return this;
     };
 
@@ -287,17 +281,17 @@ var RegexBuilder = function (parent) {
     // ANCHORS (ZERO-WIDTH ASSERTIONS)
 
     this.startOfString = function () {
-        this.stringBuilder += "^";
+        _stringBuilder += "^";
         return this;
     };
 
     this.endOfString = function () {
-        this.stringBuilder += "$";
+        _stringBuilder += "$";
         return this;
     };
 
     this.wordBoundary = function () {
-        this.stringBuilder += "\\b";
+        _stringBuilder += "\\b";
         return this;
     };
 
@@ -306,23 +300,25 @@ var RegexBuilder = function (parent) {
     // GROUPING
 
     this.startGroup = function () {
-        this.stringBuilder += "(";
-        return new RegexBuilder(this);
+        _stringBuilder += "(";
+        _openGroupCount++;
+        return this;
     };
 
     this.startNonCapturingGroup = function () {
-        this.stringBuilder += "(?:";
-        return new RegexBuilder(this);
+        _stringBuilder += "(?:";
+        _openGroupCount++;
+        return this;
     };
 
     this.endGroup = function (quantifier) {
-        if (!this.parent) {
+        if (_openGroupCount === 0) {
             throw new Error("Cannot call endGroup() until a group has been started with startGroup()");
         }
-        this.stringBuilder += ")";
-        addQuantifier(this, quantifier);
-        this.parent.stringBuilder = this.stringBuilder;
-        return this.parent;
+        _stringBuilder += ")";
+        _openGroupCount--;
+        addQuantifier(quantifier);
+        return this;
     };
 };
 
