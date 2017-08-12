@@ -126,7 +126,7 @@ var RegexBuilder = function () {
             throw new Error("One group is still open");
         }
         if (_openGroupCount > 1) {
-            throw new Error(_openGroupCount + "groups are still open");
+            throw new Error(_openGroupCount + " groups are still open");
         }
 
         var flags = "";

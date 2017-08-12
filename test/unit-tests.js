@@ -1936,72 +1936,73 @@ var runAllTests = function(QUnit) {
         assert.notOk(regex.test(Strings.MacAddress));
     });
 
-    // QUnit.test("TestExceptionGroupMismatch1", function(assert)
-    // {
-    //     RegexBuilderException exception = null;
-    //
-    //     try
-    //     {
-    //         new RegexBuilder()
-    //             .endGroup()
-    //             .buildRegex();
-    //     });
-    //     catch (RegexBuilderException e)
-    //     {
-    //         exception = e;
-    //     });
-    //     assert.IsNotNull(exception);
-    //     assert.equal(exception.Regex, "");
-    // });
-    //
-    // QUnit.test("TestExceptionGroupMismatch2", function(assert)
-    // {
-    //     RegexBuilderException exception = null;
-    //
-    //     try
-    //     {
-    //         new RegexBuilder()
-    //             .startGroup()
-    //             .buildRegex();
-    //     });
-    //     catch (RegexBuilderException e)
-    //     {
-    //         exception = e;
-    //     });
-    //     assert.IsNotNull(exception);
-    //     assert.equal(exception.Regex, "(");
-    // });
-    //
-    // QUnit.test("TestExceptionGroupMismatch3", function(assert)
-    // {
-    //     RegexBuilderException exception = null;
-    //
-    //     try
-    //     {
-    //         new RegexBuilder()
-    //             .startGroup()
-    //             .startGroup()
-    //             .endGroup()
-    //             .buildRegex();
-    //     });
-    //     catch (RegexBuilderException e)
-    //     {
-    //         exception = e;
-    //     });
-    //     assert.IsNotNull(exception);
-    //     assert.equal(exception.Regex, "(()");
-    // });
-    //
-    // QUnit.test("TestExceptionSingleLineMultiLine", function(assert)
-    // {
-    //     assert.Throws<RegexBuilderException>(() =>
-    //     {
-    //         new RegexBuilder()
-    //             .anyCharacter()
-    //             .buildRegex(RegexOptions.Singleline, RegexOptions.Multiline);
-    // }););
-    // });
-    //
+    QUnit.test("TestExceptionGroupMismatch1", function(assert)
+    {
+        assert.throws(
+            function(){
+                new RegexBuilder()
+                    .endGroup()
+                    .buildRegex();
+            },
+            new Error("Cannot call endGroup() until a group has been started with startGroup()")
+        );
+    });
+
+    QUnit.test("TestExceptionGroupMismatch2", function(assert)
+    {
+        assert.throws(
+            function(){
+                new RegexBuilder()
+                    .startGroup()
+                    .buildRegex();
+            },
+            new Error("One group is still open")
+        );
+    });
+
+    QUnit.test("TestExceptionGroupMismatch3", function(assert)
+    {
+        assert.throws(
+            function(){
+                new RegexBuilder()
+                    .startGroup()
+                    .startGroup()
+                    .endGroup()
+                    .buildRegex();
+
+            },
+            new Error("One group is still open")
+        );
+    });
+
+    QUnit.test("TestExceptionGroupMismatch4", function(assert)
+    {
+        assert.throws(
+            function(){
+                new RegexBuilder()
+                    .startGroup()
+                    .startGroup()
+                    .buildRegex();
+
+            },
+            new Error("2 groups are still open")
+        );
+    });
+
+    QUnit.test("TestExceptionGroupMismatch4", function(assert)
+    {
+        assert.throws(
+            function(){
+                new RegexBuilder()
+                    .startGroup()
+                    .startGroup()
+                    .buildRegex();
+
+            },
+            new Error("2 groups are still open")
+        );
+    });
+
     // QUnit.test("TestZeroOrMoreButAsFewAsPossible", function(assert)
     // {
     //     var regex = new RegexBuilder()
