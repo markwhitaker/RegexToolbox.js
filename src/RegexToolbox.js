@@ -11,46 +11,59 @@ Array.prototype.has = function(item) {
 
 // ---------- RegexQuantifier ----------
 
-var RegexQuantifier = function(regexString) {
-    if (!(typeof(regexString) === "string" || regexString instanceof String)) {
-        throw new Error("regexString must be a String");
+var RegexQuantifier = function(regexString, greedy) {
+    var validPattern = /(\*|\+|\?|{\d+}|{\d+,}|{\d+,\d+})\??/;
+
+    if (!validPattern.test(regexString)) {
+        throw new Error("Invalid regexString");
     }
 
-    this.r = regexString;
+    var _regexString = regexString;
+
+    this.butAsFewAsPossible = function() {
+        if (!greedy) {
+            throw new Error("butAsFewAsPossible() can't be called on this quantifier")
+        }
+        return new RegexQuantifier(_regexString + "?", false);
+    };
+
+    this.regexString = function(){
+        return _regexString;
+    };
 };
 
 /**
  * Quantifier to match the preceding element zero or more times
  * @type {RegexQuantifier}
  */
-RegexQuantifier.zeroOrMore = new RegexQuantifier("*");
+RegexQuantifier.zeroOrMore = new RegexQuantifier("*", true);
 
 /**
  * Quantifier to match the preceding element one or more times
  * @type {RegexQuantifier}
  */
-RegexQuantifier.oneOrMore = new RegexQuantifier("+");
+RegexQuantifier.oneOrMore = new RegexQuantifier("+", true);
 
 /**
  * Quantifier to match the preceding element once or not at all
  * @type {RegexQuantifier}
  */
-RegexQuantifier.noneOrOne = new RegexQuantifier("?");
+RegexQuantifier.noneOrOne = new RegexQuantifier("?", true);
 
 RegexQuantifier.exactly = function(times) {
-    return new RegexQuantifier("{" + times + "}");
+    return new RegexQuantifier("{" + times + "}", false);
 };
 
 RegexQuantifier.atLeast = function(minimum) {
-    return new RegexQuantifier("{" + minimum + ",}");
+    return new RegexQuantifier("{" + minimum + ",}", true);
 };
 
 RegexQuantifier.noMoreThan = function(maximum) {
-    return new RegexQuantifier("{0," + maximum + "}");
+    return new RegexQuantifier("{0," + maximum + "}", true);
 };
 
 RegexQuantifier.between = function(minimum, maximum) {
-    return new RegexQuantifier("{" + minimum + "," + maximum + "}");
+    return new RegexQuantifier("{" + minimum + "," + maximum + "}", true);
 };
 
 
@@ -110,7 +123,7 @@ var RegexBuilder = function () {
         if (!(quantifier instanceof RegexQuantifier)) {
             throw new Error("quantifier must be a RegexQuantifier");
         }
-        _regexString += quantifier.r;
+        _regexString += quantifier.regexString();
     };
 
     var isString = function(s) {
@@ -153,6 +166,12 @@ var RegexBuilder = function () {
     // CHARACTER MATCHES
 
     this.text = function (text, quantifier) {
+        if (text === null || text === undefined || text.length === 0) {
+            return this;
+        }
+        if (!isString(text)) {
+            throw new Error("text must be a string");
+        }
         return this.regexText(makeSafeForRegex(text), quantifier);
     };
 
@@ -161,7 +180,7 @@ var RegexBuilder = function () {
             return this;
         }
         if (!isString(text)) {
-            throw new Error("text must be a String");
+            throw new Error("text must be a string");
         }
         if (!quantifier) {
             _regexString += text;

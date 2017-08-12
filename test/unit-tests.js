@@ -2003,189 +2003,234 @@ var runAllTests = function(QUnit) {
         );
     });
 
-    // QUnit.test("TestZeroOrMoreButAsFewAsPossible", function(assert)
-    // {
-    //     var regex = new RegexBuilder()
-    //         .digit(RegexQuantifier.ZeroOrMore.ButAsFewAsPossible)
-    //         .buildRegex();
-    //
-    //     assert.equal(regex.toString(), "/\d*?/");
-    //     var nonGreedyMatch = regex.exec("999");
-    //     assert.ok(nonGreedyMatch.Success);
-    //     assert.equal(nonGreedyMatch.Value, "");
-    //
-    //     assert.ok(regex.test(Strings.BothCaseAlphabet));
-    //     assert.ok(regex.test(Strings.UpperCaseAlphabet));
-    //     assert.ok(regex.test(Strings.LowerCaseAlphabet));
-    //     assert.ok(regex.test(Strings.DecimalDigits));
-    //     assert.ok(regex.test(Strings.BothCaseHexDigits));
-    //     assert.ok(regex.test(Strings.UpperCaseHexDigits));
-    //     assert.ok(regex.test(Strings.LowerCaseHexDigits));
-    //     assert.ok(regex.test(Strings.Symbols));
-    //     assert.ok(regex.test(Strings.WhiteSpace));
-    //     assert.ok(regex.test(Strings.ControlCharacters));
-    //     assert.ok(regex.test(Strings.Empty));
-    //     assert.ok(regex.test(Strings.SimpleName));
-    //     assert.ok(regex.test(Strings.SimpleEmailAddress));
-    //     assert.ok(regex.test(Strings.SimpleHttpUrl));
-    //     assert.ok(regex.test(Strings.SimpleHttpsUrl));
-    //     assert.ok(regex.test(Strings.Ipv4Address));
-    //     assert.ok(regex.test(Strings.Ipv6Address));
-    //     assert.ok(regex.test(Strings.MacAddress));
-    // });
-    //
-    // QUnit.test("TestOneOrMoreButAsFewAsPossible", function(assert)
-    // {
-    //     var regex = new RegexBuilder()
-    //         .digit(RegexQuantifier.oneOrMore.ButAsFewAsPossible)
-    //         .buildRegex();
-    //
-    //     assert.equal(regex.toString(), "/\d+?/");
-    //     var nonGreedyMatch = regex.exec("999");
-    //     assert.ok(nonGreedyMatch.Success);
-    //     assert.equal(nonGreedyMatch.Value, "9");
-    //
-    //     assert.notOk(regex.test(Strings.BothCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.UpperCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.LowerCaseAlphabet));
-    //     assert.ok(regex.test(Strings.DecimalDigits));
-    //     assert.ok(regex.test(Strings.BothCaseHexDigits));
-    //     assert.ok(regex.test(Strings.UpperCaseHexDigits));
-    //     assert.ok(regex.test(Strings.LowerCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.Symbols));
-    //     assert.notOk(regex.test(Strings.WhiteSpace));
-    //     assert.notOk(regex.test(Strings.ControlCharacters));
-    //     assert.notOk(regex.test(Strings.Empty));
-    //     assert.notOk(regex.test(Strings.SimpleName));
-    //     assert.notOk(regex.test(Strings.SimpleEmailAddress));
-    //     assert.notOk(regex.test(Strings.SimpleHttpUrl));
-    //     assert.notOk(regex.test(Strings.SimpleHttpsUrl));
-    //     assert.ok(regex.test(Strings.Ipv4Address));
-    //     assert.ok(regex.test(Strings.Ipv6Address));
-    //     assert.ok(regex.test(Strings.MacAddress));
-    // });
-    //
-    // QUnit.test("TestAtLeastButAsFewAsPossible", function(assert)
-    // {
-    //     var regex = new RegexBuilder()
-    //         .digit(RegexQuantifier.AtLeast(1).ButAsFewAsPossible)
-    //         .buildRegex();
-    //
-    //     assert.equal(regex.toString(), "/\d{1,}?/");
-    //     var nonGreedyMatch = regex.exec("999");
-    //     assert.ok(nonGreedyMatch.Success);
-    //     assert.equal(nonGreedyMatch.Value, "9");
-    //
-    //     assert.notOk(regex.test(Strings.BothCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.UpperCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.LowerCaseAlphabet));
-    //     assert.ok(regex.test(Strings.DecimalDigits));
-    //     assert.ok(regex.test(Strings.BothCaseHexDigits));
-    //     assert.ok(regex.test(Strings.UpperCaseHexDigits));
-    //     assert.ok(regex.test(Strings.LowerCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.Symbols));
-    //     assert.notOk(regex.test(Strings.WhiteSpace));
-    //     assert.notOk(regex.test(Strings.ControlCharacters));
-    //     assert.notOk(regex.test(Strings.Empty));
-    //     assert.notOk(regex.test(Strings.SimpleName));
-    //     assert.notOk(regex.test(Strings.SimpleEmailAddress));
-    //     assert.notOk(regex.test(Strings.SimpleHttpUrl));
-    //     assert.notOk(regex.test(Strings.SimpleHttpsUrl));
-    //     assert.ok(regex.test(Strings.Ipv4Address));
-    //     assert.ok(regex.test(Strings.Ipv6Address));
-    //     assert.ok(regex.test(Strings.MacAddress));
-    // });
-    //
-    // QUnit.test("TestBetweenButAsFewAsPossible", function(assert)
-    // {
-    //     var regex = new RegexBuilder()
-    //         .digit(RegexQuantifier.Between(2, 100).ButAsFewAsPossible)
-    //         .buildRegex();
-    //
-    //     assert.equal(regex.toString(), "/\d{2,100}?/");
-    //     var nonGreedyMatch = regex.exec("999");
-    //     assert.ok(nonGreedyMatch.Success);
-    //     assert.equal(nonGreedyMatch.Value, "99");
-    //
-    //     assert.notOk(regex.test(Strings.BothCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.UpperCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.LowerCaseAlphabet));
-    //     assert.ok(regex.test(Strings.DecimalDigits));
-    //     assert.ok(regex.test(Strings.BothCaseHexDigits));
-    //     assert.ok(regex.test(Strings.UpperCaseHexDigits));
-    //     assert.ok(regex.test(Strings.LowerCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.Symbols));
-    //     assert.notOk(regex.test(Strings.WhiteSpace));
-    //     assert.notOk(regex.test(Strings.ControlCharacters));
-    //     assert.notOk(regex.test(Strings.Empty));
-    //     assert.notOk(regex.test(Strings.SimpleName));
-    //     assert.notOk(regex.test(Strings.SimpleEmailAddress));
-    //     assert.notOk(regex.test(Strings.SimpleHttpUrl));
-    //     assert.notOk(regex.test(Strings.SimpleHttpsUrl));
-    //     assert.ok(regex.test(Strings.Ipv4Address));
-    //     assert.ok(regex.test(Strings.Ipv6Address));
-    //     assert.ok(regex.test(Strings.MacAddress));
-    // });
-    //
-    // QUnit.test("TestNoMoreThanButAsFewAsPossible", function(assert)
-    // {
-    //     var regex = new RegexBuilder()
-    //         .digit(RegexQuantifier.NoMoreThan(2).ButAsFewAsPossible)
-    //         .buildRegex();
-    //
-    //     assert.equal(regex.toString(), "/\d{0,2}?/");
-    //     var nonGreedyMatch = regex.exec("999");
-    //     assert.ok(nonGreedyMatch.Success);
-    //     assert.equal(nonGreedyMatch.Value, "");
-    //
-    //     assert.ok(regex.test(Strings.BothCaseAlphabet));
-    //     assert.ok(regex.test(Strings.UpperCaseAlphabet));
-    //     assert.ok(regex.test(Strings.LowerCaseAlphabet));
-    //     assert.ok(regex.test(Strings.DecimalDigits));
-    //     assert.ok(regex.test(Strings.BothCaseHexDigits));
-    //     assert.ok(regex.test(Strings.UpperCaseHexDigits));
-    //     assert.ok(regex.test(Strings.LowerCaseHexDigits));
-    //     assert.ok(regex.test(Strings.Symbols));
-    //     assert.ok(regex.test(Strings.WhiteSpace));
-    //     assert.ok(regex.test(Strings.ControlCharacters));
-    //     assert.ok(regex.test(Strings.Empty));
-    //     assert.ok(regex.test(Strings.SimpleName));
-    //     assert.ok(regex.test(Strings.SimpleEmailAddress));
-    //     assert.ok(regex.test(Strings.SimpleHttpUrl));
-    //     assert.ok(regex.test(Strings.SimpleHttpsUrl));
-    //     assert.ok(regex.test(Strings.Ipv4Address));
-    //     assert.ok(regex.test(Strings.Ipv6Address));
-    //     assert.ok(regex.test(Strings.MacAddress));
-    // });
-    //
-    // QUnit.test("TestNoneOrOneButAsFewAsPossible", function(assert)
-    // {
-    //     var regex = new RegexBuilder()
-    //         .digit(RegexQuantifier.noneOrOne.ButAsFewAsPossible)
-    //         .buildRegex();
-    //
-    //     assert.equal(regex.toString(), "/\d??/");
-    //     var nonGreedyMatch = regex.exec("999");
-    //     assert.ok(nonGreedyMatch.Success);
-    //     assert.equal(nonGreedyMatch.Value, "");
-    //
-    //     assert.ok(regex.test(Strings.BothCaseAlphabet));
-    //     assert.ok(regex.test(Strings.UpperCaseAlphabet));
-    //     assert.ok(regex.test(Strings.LowerCaseAlphabet));
-    //     assert.ok(regex.test(Strings.DecimalDigits));
-    //     assert.ok(regex.test(Strings.BothCaseHexDigits));
-    //     assert.ok(regex.test(Strings.UpperCaseHexDigits));
-    //     assert.ok(regex.test(Strings.LowerCaseHexDigits));
-    //     assert.ok(regex.test(Strings.Symbols));
-    //     assert.ok(regex.test(Strings.WhiteSpace));
-    //     assert.ok(regex.test(Strings.ControlCharacters));
-    //     assert.ok(regex.test(Strings.Empty));
-    //     assert.ok(regex.test(Strings.SimpleName));
-    //     assert.ok(regex.test(Strings.SimpleEmailAddress));
-    //     assert.ok(regex.test(Strings.SimpleHttpUrl));
-    //     assert.ok(regex.test(Strings.SimpleHttpsUrl));
-    //     assert.ok(regex.test(Strings.Ipv4Address));
-    //     assert.ok(regex.test(Strings.Ipv6Address));
-    //     assert.ok(regex.test(Strings.MacAddress));
-    // });
+    QUnit.test("TestZeroOrMoreButAsFewAsPossible", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .digit(RegexQuantifier.zeroOrMore.butAsFewAsPossible())
+            .buildRegex();
+
+        assert.equal(regex.toString(), "/\\d*?/");
+        var nonGreedyMatch = regex.exec("999");
+        assert.notEqual(nonGreedyMatch, null);
+        assert.equal(nonGreedyMatch[0], "");
+
+        assert.ok(regex.test(Strings.BothCaseAlphabet));
+        assert.ok(regex.test(Strings.UpperCaseAlphabet));
+        assert.ok(regex.test(Strings.LowerCaseAlphabet));
+        assert.ok(regex.test(Strings.DecimalDigits));
+        assert.ok(regex.test(Strings.BothCaseHexDigits));
+        assert.ok(regex.test(Strings.UpperCaseHexDigits));
+        assert.ok(regex.test(Strings.LowerCaseHexDigits));
+        assert.ok(regex.test(Strings.Symbols));
+        assert.ok(regex.test(Strings.WhiteSpace));
+        assert.ok(regex.test(Strings.ControlCharacters));
+        assert.ok(regex.test(Strings.Empty));
+        assert.ok(regex.test(Strings.SimpleName));
+        assert.ok(regex.test(Strings.SimpleEmailAddress));
+        assert.ok(regex.test(Strings.SimpleHttpUrl));
+        assert.ok(regex.test(Strings.SimpleHttpsUrl));
+        assert.ok(regex.test(Strings.Ipv4Address));
+        assert.ok(regex.test(Strings.Ipv6Address));
+        assert.ok(regex.test(Strings.MacAddress));
+    });
+
+    QUnit.test("TestOneOrMoreButAsFewAsPossible", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .digit(RegexQuantifier.oneOrMore.butAsFewAsPossible())
+            .buildRegex();
+
+        assert.equal(regex.toString(), "/\\d+?/");
+        var nonGreedyMatch = regex.exec("999");
+        assert.notEqual(nonGreedyMatch, null);
+        assert.equal(nonGreedyMatch[0], "9");
+
+        assert.notOk(regex.test(Strings.BothCaseAlphabet));
+        assert.notOk(regex.test(Strings.UpperCaseAlphabet));
+        assert.notOk(regex.test(Strings.LowerCaseAlphabet));
+        assert.ok(regex.test(Strings.DecimalDigits));
+        assert.ok(regex.test(Strings.BothCaseHexDigits));
+        assert.ok(regex.test(Strings.UpperCaseHexDigits));
+        assert.ok(regex.test(Strings.LowerCaseHexDigits));
+        assert.notOk(regex.test(Strings.Symbols));
+        assert.notOk(regex.test(Strings.WhiteSpace));
+        assert.notOk(regex.test(Strings.ControlCharacters));
+        assert.notOk(regex.test(Strings.Empty));
+        assert.notOk(regex.test(Strings.SimpleName));
+        assert.notOk(regex.test(Strings.SimpleEmailAddress));
+        assert.notOk(regex.test(Strings.SimpleHttpUrl));
+        assert.notOk(regex.test(Strings.SimpleHttpsUrl));
+        assert.ok(regex.test(Strings.Ipv4Address));
+        assert.ok(regex.test(Strings.Ipv6Address));
+        assert.ok(regex.test(Strings.MacAddress));
+    });
+
+    QUnit.test("TestAtLeastButAsFewAsPossible", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .digit(RegexQuantifier.atLeast(1).butAsFewAsPossible())
+            .buildRegex();
+
+        assert.equal(regex.toString(), "/\\d{1,}?/");
+        var nonGreedyMatch = regex.exec("999");
+        assert.notEqual(nonGreedyMatch, null);
+        assert.equal(nonGreedyMatch[0], "9");
+
+        assert.notOk(regex.test(Strings.BothCaseAlphabet));
+        assert.notOk(regex.test(Strings.UpperCaseAlphabet));
+        assert.notOk(regex.test(Strings.LowerCaseAlphabet));
+        assert.ok(regex.test(Strings.DecimalDigits));
+        assert.ok(regex.test(Strings.BothCaseHexDigits));
+        assert.ok(regex.test(Strings.UpperCaseHexDigits));
+        assert.ok(regex.test(Strings.LowerCaseHexDigits));
+        assert.notOk(regex.test(Strings.Symbols));
+        assert.notOk(regex.test(Strings.WhiteSpace));
+        assert.notOk(regex.test(Strings.ControlCharacters));
+        assert.notOk(regex.test(Strings.Empty));
+        assert.notOk(regex.test(Strings.SimpleName));
+        assert.notOk(regex.test(Strings.SimpleEmailAddress));
+        assert.notOk(regex.test(Strings.SimpleHttpUrl));
+        assert.notOk(regex.test(Strings.SimpleHttpsUrl));
+        assert.ok(regex.test(Strings.Ipv4Address));
+        assert.ok(regex.test(Strings.Ipv6Address));
+        assert.ok(regex.test(Strings.MacAddress));
+    });
+
+    QUnit.test("TestBetweenButAsFewAsPossible", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .digit(RegexQuantifier.between(2, 100).butAsFewAsPossible())
+            .buildRegex();
+
+        assert.equal(regex.toString(), "/\\d{2,100}?/");
+        var nonGreedyMatch = regex.exec("999");
+        assert.notEqual(nonGreedyMatch, null);
+        assert.equal(nonGreedyMatch[0], "99");
+
+        assert.notOk(regex.test(Strings.BothCaseAlphabet));
+        assert.notOk(regex.test(Strings.UpperCaseAlphabet));
+        assert.notOk(regex.test(Strings.LowerCaseAlphabet));
+        assert.ok(regex.test(Strings.DecimalDigits));
+        assert.ok(regex.test(Strings.BothCaseHexDigits));
+        assert.ok(regex.test(Strings.UpperCaseHexDigits));
+        assert.ok(regex.test(Strings.LowerCaseHexDigits));
+        assert.notOk(regex.test(Strings.Symbols));
+        assert.notOk(regex.test(Strings.WhiteSpace));
+        assert.notOk(regex.test(Strings.ControlCharacters));
+        assert.notOk(regex.test(Strings.Empty));
+        assert.notOk(regex.test(Strings.SimpleName));
+        assert.notOk(regex.test(Strings.SimpleEmailAddress));
+        assert.notOk(regex.test(Strings.SimpleHttpUrl));
+        assert.notOk(regex.test(Strings.SimpleHttpsUrl));
+        assert.ok(regex.test(Strings.Ipv4Address));
+        assert.ok(regex.test(Strings.Ipv6Address));
+        assert.ok(regex.test(Strings.MacAddress));
+    });
+
+    QUnit.test("TestNoMoreThanButAsFewAsPossible", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .digit(RegexQuantifier.noMoreThan(2).butAsFewAsPossible())
+            .buildRegex();
+
+        assert.equal(regex.toString(), "/\\d{0,2}?/");
+        var nonGreedyMatch = regex.exec("999");
+        assert.notEqual(nonGreedyMatch, null);
+        assert.equal(nonGreedyMatch[0], "");
+
+        assert.ok(regex.test(Strings.BothCaseAlphabet));
+        assert.ok(regex.test(Strings.UpperCaseAlphabet));
+        assert.ok(regex.test(Strings.LowerCaseAlphabet));
+        assert.ok(regex.test(Strings.DecimalDigits));
+        assert.ok(regex.test(Strings.BothCaseHexDigits));
+        assert.ok(regex.test(Strings.UpperCaseHexDigits));
+        assert.ok(regex.test(Strings.LowerCaseHexDigits));
+        assert.ok(regex.test(Strings.Symbols));
+        assert.ok(regex.test(Strings.WhiteSpace));
+        assert.ok(regex.test(Strings.ControlCharacters));
+        assert.ok(regex.test(Strings.Empty));
+        assert.ok(regex.test(Strings.SimpleName));
+        assert.ok(regex.test(Strings.SimpleEmailAddress));
+        assert.ok(regex.test(Strings.SimpleHttpUrl));
+        assert.ok(regex.test(Strings.SimpleHttpsUrl));
+        assert.ok(regex.test(Strings.Ipv4Address));
+        assert.ok(regex.test(Strings.Ipv6Address));
+        assert.ok(regex.test(Strings.MacAddress));
+    });
+
+    QUnit.test("TestNoneOrOneButAsFewAsPossible", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .digit(RegexQuantifier.noneOrOne.butAsFewAsPossible())
+            .buildRegex();
+
+        assert.equal(regex.toString(), "/\\d??/");
+        var nonGreedyMatch = regex.exec("999");
+        assert.notEqual(nonGreedyMatch, null);
+        assert.equal(nonGreedyMatch[0], "");
+
+        assert.ok(regex.test(Strings.BothCaseAlphabet));
+        assert.ok(regex.test(Strings.UpperCaseAlphabet));
+        assert.ok(regex.test(Strings.LowerCaseAlphabet));
+        assert.ok(regex.test(Strings.DecimalDigits));
+        assert.ok(regex.test(Strings.BothCaseHexDigits));
+        assert.ok(regex.test(Strings.UpperCaseHexDigits));
+        assert.ok(regex.test(Strings.LowerCaseHexDigits));
+        assert.ok(regex.test(Strings.Symbols));
+        assert.ok(regex.test(Strings.WhiteSpace));
+        assert.ok(regex.test(Strings.ControlCharacters));
+        assert.ok(regex.test(Strings.Empty));
+        assert.ok(regex.test(Strings.SimpleName));
+        assert.ok(regex.test(Strings.SimpleEmailAddress));
+        assert.ok(regex.test(Strings.SimpleHttpUrl));
+        assert.ok(regex.test(Strings.SimpleHttpsUrl));
+        assert.ok(regex.test(Strings.Ipv4Address));
+        assert.ok(regex.test(Strings.Ipv6Address));
+        assert.ok(regex.test(Strings.MacAddress));
+    });
+
+    QUnit.test("TestExceptionButAsFewAsPossibleOnInvalidQuantifier", function(assert)
+    {
+        assert.throws(
+            function(){
+                new RegexBuilder()
+                    .digit(RegexQuantifier.exactly(1).butAsFewAsPossible())
+                    .buildRegex();
+            },
+            new Error("butAsFewAsPossible() can't be called on this quantifier")
+        );
+    });
+
+    QUnit.test("TestExceptionButAsFewAsPossibleTwice", function(assert)
+    {
+        assert.throws(
+            function(){
+                new RegexBuilder()
+                    .digit(RegexQuantifier.exactly(1).butAsFewAsPossible().butAsFewAsPossible())
+                    .buildRegex();
+            },
+            new Error("butAsFewAsPossible() can't be called on this quantifier")
+        );
+    });
+
+    QUnit.test("TestExceptionInvalidQuantifierRegexString", function(assert)
+    {
+        assert.throws(
+            function(){
+                new RegexQuantifier(1);
+            },
+            new Error("Invalid regexString")
+        );
+    });
+
+    QUnit.test("TestExceptionTextNotString", function(assert)
+    {
+        assert.throws(
+            function(){
+                new RegexBuilder()
+                    .text(true);
+            },
+            new Error("text must be a string")
+        );
+    });
 };
