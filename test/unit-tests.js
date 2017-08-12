@@ -89,37 +89,37 @@ var runAllTests = function(QUnit) {
         assert.notOk(regex.test(Strings.MacAddress));
     });
 
-    // QUnit.test("TestSimpleTextCaseInsensitive", function(assert)
-    // {
-    //     var regex = new RegexBuilder()
-    //         .text("cat")
-    //         .buildRegex(RegexOptions.IgnoreCase);
-    //
-    //     assert.equal(regex.toString(), "/cat/");
-    //     assert.ok(regex.test("cat"));
-    //     assert.ok(regex.test("scatter"));
-    //     assert.ok(regex.test("Cat"));
-    //     assert.notOk(regex.test("dog"));
-    //
-    //     assert.notOk(regex.test(Strings.BothCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.UpperCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.LowerCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.DecimalDigits));
-    //     assert.notOk(regex.test(Strings.BothCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.UpperCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.LowerCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.Symbols));
-    //     assert.notOk(regex.test(Strings.WhiteSpace));
-    //     assert.notOk(regex.test(Strings.ControlCharacters));
-    //     assert.notOk(regex.test(Strings.Empty));
-    //     assert.notOk(regex.test(Strings.SimpleName));
-    //     assert.notOk(regex.test(Strings.SimpleEmailAddress));
-    //     assert.notOk(regex.test(Strings.SimpleHttpUrl));
-    //     assert.notOk(regex.test(Strings.SimpleHttpsUrl));
-    //     assert.notOk(regex.test(Strings.Ipv4Address));
-    //     assert.notOk(regex.test(Strings.Ipv6Address));
-    //     assert.notOk(regex.test(Strings.MacAddress));
-    // });
+    QUnit.test("TestSimpleTextCaseInsensitive", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .text("cat")
+            .buildRegex(RegexOptions.IGNORE_CASE);
+
+        assert.equal(regex.toString(), "/cat/i");
+        assert.ok(regex.test("cat"));
+        assert.ok(regex.test("scatter"));
+        assert.ok(regex.test("Cat"));
+        assert.notOk(regex.test("dog"));
+
+        assert.notOk(regex.test(Strings.BothCaseAlphabet));
+        assert.notOk(regex.test(Strings.UpperCaseAlphabet));
+        assert.notOk(regex.test(Strings.LowerCaseAlphabet));
+        assert.notOk(regex.test(Strings.DecimalDigits));
+        assert.notOk(regex.test(Strings.BothCaseHexDigits));
+        assert.notOk(regex.test(Strings.UpperCaseHexDigits));
+        assert.notOk(regex.test(Strings.LowerCaseHexDigits));
+        assert.notOk(regex.test(Strings.Symbols));
+        assert.notOk(regex.test(Strings.WhiteSpace));
+        assert.notOk(regex.test(Strings.ControlCharacters));
+        assert.notOk(regex.test(Strings.Empty));
+        assert.notOk(regex.test(Strings.SimpleName));
+        assert.notOk(regex.test(Strings.SimpleEmailAddress));
+        assert.notOk(regex.test(Strings.SimpleHttpUrl));
+        assert.notOk(regex.test(Strings.SimpleHttpsUrl));
+        assert.notOk(regex.test(Strings.Ipv4Address));
+        assert.notOk(regex.test(Strings.Ipv6Address));
+        assert.notOk(regex.test(Strings.MacAddress));
+    });
 
     QUnit.test("TestSimpleTextWithRegexCharacters", function(assert)
     {
@@ -1633,121 +1633,166 @@ var runAllTests = function(QUnit) {
         assert.notOk(regex.test(Strings.MacAddress));
     });
 
-    // QUnit.test("TestOptionSingleLine", function(assert)
-    // {
-    //     var regex = new RegexBuilder()
-    //         .digit()
-    //         .anyCharacter()
-    //         .digit()
-    //         .buildRegex(RegexOptions.Singleline);
-    //
-    //     assert.equal(regex.toString(), "/\d.\d/");
-    //     assert.ok(regex.Options.HasFlag(RegexOptions.Singleline));
-    //     assert.ok(regex.test("111"));
-    //     assert.ok(regex.test("1 1"));
-    //     assert.ok(regex.test("1\n1"));
-    //     assert.ok(regex.test("1.1"));
-    //     assert.notOk(regex.test("a\nb"));
-    //     assert.notOk(regex.test("a b"));
-    //     assert.notOk(regex.test(" "));
-    //     assert.notOk(regex.test(""));
-    //
-    //     assert.notOk(regex.test(Strings.BothCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.UpperCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.LowerCaseAlphabet));
-    //     assert.ok(regex.test(Strings.DecimalDigits));
-    //     assert.ok(regex.test(Strings.BothCaseHexDigits));
-    //     assert.ok(regex.test(Strings.UpperCaseHexDigits));
-    //     assert.ok(regex.test(Strings.LowerCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.Symbols));
-    //     assert.notOk(regex.test(Strings.WhiteSpace));
-    //     assert.notOk(regex.test(Strings.ControlCharacters));
-    //     assert.notOk(regex.test(Strings.Empty));
-    //     assert.notOk(regex.test(Strings.SimpleName));
-    //     assert.notOk(regex.test(Strings.SimpleEmailAddress));
-    //     assert.notOk(regex.test(Strings.SimpleHttpUrl));
-    //     assert.notOk(regex.test(Strings.SimpleHttpsUrl));
-    //     assert.ok(regex.test(Strings.Ipv4Address));
-    //     assert.ok(regex.test(Strings.Ipv6Address));
-    //     assert.ok(regex.test(Strings.MacAddress));
-    // });
+    QUnit.test("TestOptionMultiLine", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .startOfString()
+            .text("find me!")
+            .endOfString()
+            .buildRegex(RegexOptions.MULTI_LINE);
 
-    // QUnit.test("TestOptionMultiLine", function(assert)
-    // {
-    //     var regex = new RegexBuilder()
-    //         .StartOfString()
-    //         .text("find me!")
-    //         .EndOfString()
-    //         .buildRegex(RegexOptions.Multiline);
-    //
-    //     assert.equal(regex.toString(), "/^find me!$/");
-    //     assert.ok(regex.Options.HasFlag(RegexOptions.Multiline));
-    //     assert.ok(regex.test("find me!"));
-    //     assert.ok(regex.test("find me!\nline 2"));
-    //     assert.ok(regex.test("line 1\nfind me!"));
-    //     assert.ok(regex.test("line 1\nfind me!\nline 3"));
-    //     assert.notOk(regex.test(" find me!"));
-    //     assert.notOk(regex.test("find me! "));
-    //     assert.notOk(regex.test(" find me! "));
-    //     assert.notOk(regex.test(""));
-    //
-    //     assert.notOk(regex.test(Strings.BothCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.UpperCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.LowerCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.DecimalDigits));
-    //     assert.notOk(regex.test(Strings.BothCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.UpperCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.LowerCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.Symbols));
-    //     assert.notOk(regex.test(Strings.WhiteSpace));
-    //     assert.notOk(regex.test(Strings.ControlCharacters));
-    //     assert.notOk(regex.test(Strings.Empty));
-    //     assert.notOk(regex.test(Strings.SimpleName));
-    //     assert.notOk(regex.test(Strings.SimpleEmailAddress));
-    //     assert.notOk(regex.test(Strings.SimpleHttpUrl));
-    //     assert.notOk(regex.test(Strings.SimpleHttpsUrl));
-    //     assert.notOk(regex.test(Strings.Ipv4Address));
-    //     assert.notOk(regex.test(Strings.Ipv6Address));
-    //     assert.notOk(regex.test(Strings.MacAddress));
-    // });
-    //
-    // QUnit.test("TestOptionIgnoreCase", function(assert)
-    // {
-    //     var regex = new RegexBuilder()
-    //         .anyCharacterFrom("cat")
-    //         .buildRegex(RegexOptions.IgnoreCase);
-    //
-    //     assert.equal(regex.toString(), "/[cat]/");
-    //     assert.ok(regex.Options.HasFlag(RegexOptions.IgnoreCase));
-    //     assert.ok(regex.test("cat"));
-    //     assert.ok(regex.test("tiger"));
-    //     assert.ok(regex.test("Ant"));
-    //     assert.ok(regex.test("CAT"));
-    //     assert.ok(regex.test("                A"));
-    //     assert.notOk(regex.test("dog"));
-    //     assert.notOk(regex.test(" "));
-    //     assert.notOk(regex.test(""));
-    //
-    //     assert.ok(regex.test(Strings.BothCaseAlphabet));
-    //     assert.ok(regex.test(Strings.UpperCaseAlphabet));
-    //     assert.ok(regex.test(Strings.LowerCaseAlphabet));
-    //     assert.notOk(regex.test(Strings.DecimalDigits));
-    //     assert.ok(regex.test(Strings.BothCaseHexDigits));
-    //     assert.ok(regex.test(Strings.UpperCaseHexDigits));
-    //     assert.ok(regex.test(Strings.LowerCaseHexDigits));
-    //     assert.notOk(regex.test(Strings.Symbols));
-    //     assert.notOk(regex.test(Strings.WhiteSpace));
-    //     assert.notOk(regex.test(Strings.ControlCharacters));
-    //     assert.notOk(regex.test(Strings.Empty));
-    //     assert.ok(regex.test(Strings.SimpleName));
-    //     assert.ok(regex.test(Strings.SimpleEmailAddress));
-    //     assert.ok(regex.test(Strings.SimpleHttpUrl));
-    //     assert.ok(regex.test(Strings.SimpleHttpsUrl));
-    //     assert.notOk(regex.test(Strings.Ipv4Address));
-    //     assert.ok(regex.test(Strings.Ipv6Address));
-    //     assert.ok(regex.test(Strings.MacAddress));
-    // });
-    //
+        assert.equal(regex.toString(), "/^find me!$/m");
+        assert.notOk(regex.global);
+        assert.notOk(regex.ignoreCase);
+        assert.ok(regex.multiline);
+        assert.ok(regex.test("find me!"));
+        assert.ok(regex.test("find me!\nline 2"));
+        assert.ok(regex.test("line 1\nfind me!"));
+        assert.ok(regex.test("line 1\nfind me!\nline 3"));
+        assert.notOk(regex.test(" find me!"));
+        assert.notOk(regex.test("find me! "));
+        assert.notOk(regex.test(" find me! "));
+        assert.notOk(regex.test(""));
+
+        assert.notOk(regex.test(Strings.BothCaseAlphabet));
+        assert.notOk(regex.test(Strings.UpperCaseAlphabet));
+        assert.notOk(regex.test(Strings.LowerCaseAlphabet));
+        assert.notOk(regex.test(Strings.DecimalDigits));
+        assert.notOk(regex.test(Strings.BothCaseHexDigits));
+        assert.notOk(regex.test(Strings.UpperCaseHexDigits));
+        assert.notOk(regex.test(Strings.LowerCaseHexDigits));
+        assert.notOk(regex.test(Strings.Symbols));
+        assert.notOk(regex.test(Strings.WhiteSpace));
+        assert.notOk(regex.test(Strings.ControlCharacters));
+        assert.notOk(regex.test(Strings.Empty));
+        assert.notOk(regex.test(Strings.SimpleName));
+        assert.notOk(regex.test(Strings.SimpleEmailAddress));
+        assert.notOk(regex.test(Strings.SimpleHttpUrl));
+        assert.notOk(regex.test(Strings.SimpleHttpsUrl));
+        assert.notOk(regex.test(Strings.Ipv4Address));
+        assert.notOk(regex.test(Strings.Ipv6Address));
+        assert.notOk(regex.test(Strings.MacAddress));
+    });
+
+    QUnit.test("TestOptionIgnoreCase", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .anyCharacterFrom("cat")
+            .buildRegex(RegexOptions.IGNORE_CASE);
+
+        assert.equal(regex.toString(), "/[cat]/i");
+        assert.notOk(regex.global);
+        assert.ok(regex.ignoreCase);
+        assert.notOk(regex.multiline);
+        assert.ok(regex.test("cat"));
+        assert.ok(regex.test("tiger"));
+        assert.ok(regex.test("Ant"));
+        assert.ok(regex.test("CAT"));
+        assert.ok(regex.test("                A"));
+        assert.notOk(regex.test("dog"));
+        assert.notOk(regex.test(" "));
+        assert.notOk(regex.test(""));
+
+        assert.ok(regex.test(Strings.BothCaseAlphabet));
+        assert.ok(regex.test(Strings.UpperCaseAlphabet));
+        assert.ok(regex.test(Strings.LowerCaseAlphabet));
+        assert.notOk(regex.test(Strings.DecimalDigits));
+        assert.ok(regex.test(Strings.BothCaseHexDigits));
+        assert.ok(regex.test(Strings.UpperCaseHexDigits));
+        assert.ok(regex.test(Strings.LowerCaseHexDigits));
+        assert.notOk(regex.test(Strings.Symbols));
+        assert.notOk(regex.test(Strings.WhiteSpace));
+        assert.notOk(regex.test(Strings.ControlCharacters));
+        assert.notOk(regex.test(Strings.Empty));
+        assert.ok(regex.test(Strings.SimpleName));
+        assert.ok(regex.test(Strings.SimpleEmailAddress));
+        assert.ok(regex.test(Strings.SimpleHttpUrl));
+        assert.ok(regex.test(Strings.SimpleHttpsUrl));
+        assert.notOk(regex.test(Strings.Ipv4Address));
+        assert.ok(regex.test(Strings.Ipv6Address));
+        assert.ok(regex.test(Strings.MacAddress));
+    });
+
+    QUnit.test("TestOptionGlobal", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .text("cat")
+            .buildRegex(RegexOptions.GLOBAL_MATCH);
+
+        var replaced = "catcatcat".replace(regex, "dog");
+
+        assert.equal(regex.toString(), "/cat/g");
+        assert.ok(regex.global);
+        assert.notOk(regex.ignoreCase);
+        assert.notOk(regex.multiline);
+        assert.equal(replaced, "dogdogdog");
+        assert.ok(regex.test("cat"));
+        assert.notOk(regex.test("CAT"));
+        assert.notOk(regex.test("dog"));
+        assert.notOk(regex.test(" "));
+        assert.notOk(regex.test(""));
+
+        assert.notOk(regex.test(Strings.BothCaseAlphabet));
+        assert.notOk(regex.test(Strings.UpperCaseAlphabet));
+        assert.notOk(regex.test(Strings.LowerCaseAlphabet));
+        assert.notOk(regex.test(Strings.DecimalDigits));
+        assert.notOk(regex.test(Strings.BothCaseHexDigits));
+        assert.notOk(regex.test(Strings.UpperCaseHexDigits));
+        assert.notOk(regex.test(Strings.LowerCaseHexDigits));
+        assert.notOk(regex.test(Strings.Symbols));
+        assert.notOk(regex.test(Strings.WhiteSpace));
+        assert.notOk(regex.test(Strings.ControlCharacters));
+        assert.notOk(regex.test(Strings.Empty));
+        assert.notOk(regex.test(Strings.SimpleName));
+        assert.notOk(regex.test(Strings.SimpleEmailAddress));
+        assert.notOk(regex.test(Strings.SimpleHttpUrl));
+        assert.notOk(regex.test(Strings.SimpleHttpsUrl));
+        assert.notOk(regex.test(Strings.Ipv4Address));
+        assert.notOk(regex.test(Strings.Ipv6Address));
+        assert.notOk(regex.test(Strings.MacAddress));
+    });
+
+    QUnit.test("TestAllOptions", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .startOfString()
+            .anyCharacterFrom("cat")
+            .buildRegex([RegexOptions.IGNORE_CASE, RegexOptions.MULTI_LINE, RegexOptions.GLOBAL_MATCH]);
+
+        assert.equal(regex.toString(), "/^[cat]/gim");
+        assert.ok(regex.global);
+        assert.ok(regex.ignoreCase);
+        assert.ok(regex.multiline);
+        assert.ok(regex.test("cat"));
+        // assert.ok(regex.test("tiger"));
+        // assert.ok(regex.test("Ant"));
+        // assert.ok(regex.test("CAT"));
+        // assert.ok(regex.test("DOG\ncat"));
+        // assert.notOk(regex.test("                A"));
+        // assert.notOk(regex.test("dog"));
+        // assert.notOk(regex.test(" "));
+        // assert.notOk(regex.test(""));
+        //
+        // assert.ok(regex.test(Strings.BothCaseAlphabet));
+        // assert.ok(regex.test(Strings.UpperCaseAlphabet));
+        // assert.ok(regex.test(Strings.LowerCaseAlphabet));
+        // assert.notOk(regex.test(Strings.DecimalDigits));
+        // assert.ok(regex.test(Strings.BothCaseHexDigits));
+        // assert.ok(regex.test(Strings.UpperCaseHexDigits));
+        // assert.ok(regex.test(Strings.LowerCaseHexDigits));
+        // assert.notOk(regex.test(Strings.Symbols));
+        // assert.notOk(regex.test(Strings.WhiteSpace));
+        // assert.notOk(regex.test(Strings.ControlCharacters));
+        // assert.notOk(regex.test(Strings.Empty));
+        // assert.ok(regex.test(Strings.SimpleName));
+        // assert.ok(regex.test(Strings.SimpleEmailAddress));
+        // assert.ok(regex.test(Strings.SimpleHttpUrl));
+        // assert.ok(regex.test(Strings.SimpleHttpsUrl));
+        // assert.notOk(regex.test(Strings.Ipv4Address));
+        // assert.ok(regex.test(Strings.Ipv6Address));
+        // assert.ok(regex.test(Strings.MacAddress));
+    });
+
     QUnit.test("TestEmailAddress", function(assert)
     {
         // Very basic e-mail address checker!

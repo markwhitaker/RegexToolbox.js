@@ -1,5 +1,16 @@
 "use strict";
 
+
+
+// ---------- Extensions ----------
+
+Array.prototype.has = function(item) {
+    return this.indexOf(item) > -1;
+};
+
+
+// ---------- RegexQuantifier ----------
+
 var RegexQuantifier = function(regexString) {
     if (!(typeof(regexString) === "string" || regexString instanceof String)) {
         throw new Error("regexString must be a String");
@@ -7,8 +18,6 @@ var RegexQuantifier = function(regexString) {
 
     this.r = regexString;
 };
-
-
 
 /**
  * Quantifier to match the preceding element zero or more times
@@ -44,9 +53,21 @@ RegexQuantifier.between = function(minimum, maximum) {
     return new RegexQuantifier("{" + minimum + "," + maximum + "}");
 };
 
+
+// ---------- RegexOptions ----------
+
+var RegexOptions = {
+    GLOBAL_MATCH: "option-global-match",
+    IGNORE_CASE: "option-ignore-case",
+    MULTI_LINE: "option-multi-line"
+};
+
+
+// ---------- RegexBuilder ----------
+
 var RegexBuilder = function () {
     var _openGroupCount = 0;
-    var _stringBuilder = "";
+    var _regexString = "";
 
 
 
@@ -89,7 +110,7 @@ var RegexBuilder = function () {
         if (!(quantifier instanceof RegexQuantifier)) {
             throw new Error("quantifier must be a RegexQuantifier");
         }
-        _stringBuilder += quantifier.r;
+        _regexString += quantifier.r;
     };
 
     var isString = function(s) {
@@ -100,7 +121,7 @@ var RegexBuilder = function () {
 
     // BUILD METHOD
 
-    this.buildRegex = function () {
+    this.buildRegex = function (options) {
         if (_openGroupCount === 1) {
             throw new Error("One group is still open");
         }
@@ -108,7 +129,23 @@ var RegexBuilder = function () {
             throw new Error(_openGroupCount + "groups are still open");
         }
 
-        return new RegExp(_stringBuilder);
+        var flags = "";
+        if (options) {
+            if (!(options instanceof Array)) {
+                options = [options];
+            }
+            if (options.has(RegexOptions.GLOBAL_MATCH)) {
+                flags += "g";
+            }
+            if (options.has(RegexOptions.IGNORE_CASE)) {
+                flags += "i";
+            }
+            if (options.has(RegexOptions.MULTI_LINE)) {
+                flags += "m";
+            }
+        }
+
+        return new RegExp(_regexString, flags);
     };
 
 
@@ -127,7 +164,7 @@ var RegexBuilder = function () {
             throw new Error("text must be a String");
         }
         if (!quantifier) {
-            _stringBuilder += text;
+            _regexString += text;
             return this;
         }
 
@@ -138,115 +175,115 @@ var RegexBuilder = function () {
     };
 
     this.anyCharacter = function (quantifier) {
-        _stringBuilder += ".";
+        _regexString += ".";
         addQuantifier(quantifier);
         return this;
     };
 
     this.whitespace = function (quantifier) {
-        _stringBuilder += "\\s";
+        _regexString += "\\s";
         addQuantifier(quantifier);
         return this;
     };
 
     this.nonWhitespace = function (quantifier) {
-        _stringBuilder += "\\S";
+        _regexString += "\\S";
         addQuantifier(quantifier);
         return this;
     };
 
     this.digit = function (quantifier) {
-        _stringBuilder += "\\d";
+        _regexString += "\\d";
         addQuantifier(quantifier);
         return this;
     };
 
     this.nonDigit = function (quantifier) {
-        _stringBuilder += "\\D";
+        _regexString += "\\D";
         addQuantifier(quantifier);
         return this;
     };
 
     this.letter = function (quantifier) {
-        _stringBuilder += "[a-zA-Z]";
+        _regexString += "[a-zA-Z]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.nonLetter = function (quantifier) {
-        _stringBuilder += "[^a-zA-Z]";
+        _regexString += "[^a-zA-Z]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.uppercaseLetter = function (quantifier) {
-        _stringBuilder += "[A-Z]";
+        _regexString += "[A-Z]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.lowercaseLetter = function (quantifier) {
-        _stringBuilder += "[a-z]";
+        _regexString += "[a-z]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.letterOrDigit = function (quantifier) {
-        _stringBuilder += "[a-zA-Z0-9]";
+        _regexString += "[a-zA-Z0-9]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.nonLetterOrDigit = function (quantifier) {
-        _stringBuilder += "[^a-zA-Z0-9]";
+        _regexString += "[^a-zA-Z0-9]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.hexDigit = function (quantifier) {
-        _stringBuilder += "[0-9A-Fa-f]";
+        _regexString += "[0-9A-Fa-f]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.uppercaseHexDigit = function (quantifier) {
-        _stringBuilder += "[0-9A-F]";
+        _regexString += "[0-9A-F]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.lowercaseHexDigit = function (quantifier) {
-        _stringBuilder += "[0-9a-f]";
+        _regexString += "[0-9a-f]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.nonHexDigit = function (quantifier) {
-        _stringBuilder += "[^0-9A-Fa-f]";
+        _regexString += "[^0-9A-Fa-f]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.wordCharacter = function (quantifier) {
-        _stringBuilder += "\\w";
+        _regexString += "\\w";
         addQuantifier(quantifier);
         return this;
     };
 
     this.nonWordCharacter = function (quantifier) {
-        _stringBuilder += "\\W";
+        _regexString += "\\W";
         addQuantifier(quantifier);
         return this;
     };
 
     this.anyCharacterFrom = function (characters, quantifier) {
-        _stringBuilder += "[" + makeSafeForCharacterClass(characters) + "]";
+        _regexString += "[" + makeSafeForCharacterClass(characters) + "]";
         addQuantifier(quantifier);
         return this;
     };
 
     this.anyCharacterExcept = function (characters, quantifier) {
-        _stringBuilder += "[^" + makeSafeForCharacterClass(characters) + "]";
+        _regexString += "[^" + makeSafeForCharacterClass(characters) + "]";
         addQuantifier(quantifier);
         return this;
     };
@@ -281,17 +318,17 @@ var RegexBuilder = function () {
     // ANCHORS (ZERO-WIDTH ASSERTIONS)
 
     this.startOfString = function () {
-        _stringBuilder += "^";
+        _regexString += "^";
         return this;
     };
 
     this.endOfString = function () {
-        _stringBuilder += "$";
+        _regexString += "$";
         return this;
     };
 
     this.wordBoundary = function () {
-        _stringBuilder += "\\b";
+        _regexString += "\\b";
         return this;
     };
 
@@ -300,13 +337,13 @@ var RegexBuilder = function () {
     // GROUPING
 
     this.startGroup = function () {
-        _stringBuilder += "(";
+        _regexString += "(";
         _openGroupCount++;
         return this;
     };
 
     this.startNonCapturingGroup = function () {
-        _stringBuilder += "(?:";
+        _regexString += "(?:";
         _openGroupCount++;
         return this;
     };
@@ -315,7 +352,7 @@ var RegexBuilder = function () {
         if (_openGroupCount === 0) {
             throw new Error("Cannot call endGroup() until a group has been started with startGroup()");
         }
-        _stringBuilder += ")";
+        _regexString += ")";
         _openGroupCount--;
         addQuantifier(quantifier);
         return this;
