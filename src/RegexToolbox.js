@@ -18,7 +18,7 @@ Array.prototype.has = function(item) {
 
 /**
  * Quantifiers that can be applied to regex elements or groups.
- * Don't call this directly: instead use the prototype properties and methods
+ * Don't call this directly: instead use the class properties and methods
  * such as RegexQuantifier.zeroOrMore.
  *
  * @param regexString   A valid regex quantifier string
