@@ -104,9 +104,25 @@ RegexQuantifier.between = function(minimum, maximum) {
 
 // ---------- RegexOptions ----------
 
+/**
+ * Options that can be passed to RegexBuilder.buildRegex()
+ *
+ * @type {{GLOBAL_MATCH: string, IGNORE_CASE: string, MULTI_LINE: string}}
+ */
 var RegexOptions = {
+    /**
+     * Make the regex match all occurrences in a string rather than just the first
+     */
     GLOBAL_MATCH: "option-global-match",
+
+    /**
+     * Make the regex case-insensitive
+     */
     IGNORE_CASE: "option-ignore-case",
+
+    /**
+     * Cause startOfString() and endOfString() to also match line breaks within a multi-line string
+     */
     MULTI_LINE: "option-multi-line"
 };
 
