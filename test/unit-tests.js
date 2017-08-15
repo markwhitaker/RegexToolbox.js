@@ -1713,11 +1713,11 @@ var runAllTests = function(QUnit) {
         assert.ok(regex.test(Strings.MacAddress));
     });
 
-    QUnit.test("TestOptionGlobal", function(assert)
+    QUnit.test("TestOptionMatchAll", function(assert)
     {
         var regex = new RegexBuilder()
             .text("cat")
-            .buildRegex(RegexOptions.GLOBAL_MATCH);
+            .buildRegex(RegexOptions.MATCH_ALL);
 
         var replaced = "catcatcat".replace(regex, "dog");
 
@@ -1757,7 +1757,7 @@ var runAllTests = function(QUnit) {
         var regex = new RegexBuilder()
             .startOfString()
             .anyCharacterFrom("cat")
-            .buildRegex([RegexOptions.IGNORE_CASE, RegexOptions.MULTI_LINE, RegexOptions.GLOBAL_MATCH]);
+            .buildRegex([RegexOptions.IGNORE_CASE, RegexOptions.MULTI_LINE, RegexOptions.MATCH_ALL]);
 
         assert.equal(regex.toString(), "/^[cat]/gim");
         assert.ok(regex.global);
