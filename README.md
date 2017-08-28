@@ -1,6 +1,6 @@
 ![icon](artwork/RegexToolbox-icon-100.png)
 
-# Regex Toolbox
+# RegexToolbox.JS
 
 Regular expression tools for JavaScript developers.
 
