@@ -169,6 +169,9 @@ var RegexBuilder = function () {
     // Replace ] with \]
     var result = text.replace("]", "\\]");
 
+    // Replace - with \-
+    result = result.replace("-", "\\-");
+
     // replace ^ with \^ if it occurs at the start of the string
     if (result.indexOf("^") === 0) {
       result = "\\" + result;

@@ -877,6 +877,19 @@ var runAllTests = function(QUnit) {
         assert.ok(regex.test(Strings.MacAddress));
     });
 
+    QUnit.test("TestAnyCharacterFromWithHyphen", function(assert)
+    {
+        var regex = new RegexBuilder()
+            .anyCharacterFrom("a-f")
+            .buildRegex();
+
+        assert.equal(regex.toString(), "/[a\\-f]/");
+        assert.ok(regex.test("a"));
+        assert.ok(regex.test("-"));
+        assert.ok(regex.test("f"));
+        assert.notOk(regex.test("c"));
+    });
+
     QUnit.test("TestAnyCharacterFromWithCaretNotAtStart", function(assert)
     {
         var regex = new RegexBuilder()
@@ -1845,10 +1858,10 @@ var runAllTests = function(QUnit) {
             .text("s", RegexQuantifier.noneOrOne)
             .text("://")
             .nonWhitespace(RegexQuantifier.oneOrMore)
-            .anyCharacterFrom("a-zA-Z0-9_/") // Valid last characters
+            .anyCharacterFrom("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_/") // Valid last characters
             .buildRegex();
 
-        assert.equal(regex.toString(), "/http(?:s)?:\\/\\/\\S+[a-zA-Z0-9_\\/]/");
+        assert.equal(regex.toString(), "/http(?:s)?:\\/\\/\\S+[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_/]/");
         assert.ok(regex.test("http://www.mainwave.co.uk"));
         assert.ok(regex.test("https://www.mainwave.co.uk"));
         assert.notOk(regex.test("www.mainwave.co.uk"));
