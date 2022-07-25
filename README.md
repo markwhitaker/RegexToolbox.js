@@ -15,12 +15,13 @@ Regular expression tools for JavaScript developers.
 
 It is fully documented in the [project wiki](https://github.com/markwhitaker/RegexToolbox.JS/wiki).
 
----
-![icon](https://raw.githubusercontent.com/markwhitaker/RegexToolbox.NET/master/Artwork/RegexToolbox-icon-32.png) **.NET developer?** Check out the .NET version of this library, [RegexToolbox.NET](https://github.com/markwhitaker/RegexToolbox.NET).
+## RegexToolbox for other languages
 
-![icon](https://raw.githubusercontent.com/markwhitaker/RegexToolbox.Java/master/artwork/RegexToolbox-icon-32.png) **Java developer?** Check out the Java version of this library, [RegexToolbox.Java](https://github.com/markwhitaker/RegexToolbox.Java).
+![icon](https://raw.githubusercontent.com/markwhitaker/RegexToolbox.NET/master/Artwork/RegexToolbox-icon-32.png) [RegexToolbox.NET](https://github.com/markwhitaker/RegexToolbox for NET)
 
-![icon](https://raw.githubusercontent.com/markwhitaker/RegexToolbox.kt/master/artwork/RegexToolbox-icon-32.png) **Kotlin developer?** Check out the Kotlin version of this library, [RegexToolbox.kt](https://github.com/markwhitaker/RegexToolbox.kt).
+![icon](https://raw.githubusercontent.com/markwhitaker/RegexToolbox.Java/master/artwork/RegexToolbox-icon-32.png) [RegexToolbox for Java](https://github.com/markwhitaker/RegexToolbox.Java)
+
+![icon](https://raw.githubusercontent.com/markwhitaker/RegexToolbox.kt/master/artwork/RegexToolbox-icon-32.png) [RegexToolbox for Kotlin](https://github.com/markwhitaker/RegexToolbox.kt).
 
 ---
 ###### **RegexToolbox:** Now you can be a [hero](https://xkcd.com/208/) without knowing regular expressions.
