@@ -15,90 +15,85 @@ Array.prototype.has = function (item) {
 
 // ---------- RegexQuantifier ----------
 
-/**
- * Quantifiers that can be applied to regex elements or groups.
- * Don't call this directly: instead use the class properties and methods
- * such as RegexQuantifier.zeroOrMore.
- *
- * @param regexString   A valid regex quantifier string
- * @param greedy        Whether this quantifier is greedy
- * @constructor
- */
-var RegexQuantifier = function (regexString, greedy) {
-  var validPattern = /(\*|\+|\?|{\d+}|{\d+,}|{\d+,\d+})\??/;
+class RegexQuantifier {
+  static #privateToken = {}
+  #regexString = ""
+  #isGreedy = false
 
-  if (!validPattern.test(regexString)) {
-    throw new Error("Invalid regexString");
+  constructor(regexString, isGreedy, token) {
+    if (token !== RegexQuantifier.#privateToken) {
+      throw new Error("RegexQuantifier constructor is private");
+    }
+    this.#regexString = regexString;
+    this.#isGreedy = isGreedy;
   }
 
-  var _regexString = regexString;
-
-  this.butAsFewAsPossible = function () {
-    if (!greedy) {
+  butAsFewAsPossible() {
+    if (!this.#isGreedy) {
       throw new Error("butAsFewAsPossible() can't be called on this quantifier")
     }
-    return new RegexQuantifier(_regexString + "?", false);
-  };
+    return new RegexQuantifier(this.#regexString + "?", false, RegexQuantifier.#privateToken);
+  }
 
-  this.regexString = function () {
-    return _regexString;
-  };
-};
+  get regexString() {
+    return this.#regexString;
+  }
 
-/**
- * Quantifier to match the preceding element zero or more times
- * @type {RegexQuantifier}
- */
-RegexQuantifier.zeroOrMore = new RegexQuantifier("*", true);
+  /**
+   * Quantifier to match the preceding element zero or more times
+   * @type {RegexQuantifier}
+   */
+  static zeroOrMore = new RegexQuantifier("*", true, RegexQuantifier.#privateToken);
 
-/**
- * Quantifier to match the preceding element one or more times
- * @type {RegexQuantifier}
- */
-RegexQuantifier.oneOrMore = new RegexQuantifier("+", true);
+  /**
+   * Quantifier to match the preceding element one or more times
+   * @type {RegexQuantifier}
+   */
+  static oneOrMore = new RegexQuantifier("+", true, RegexQuantifier.#privateToken);
 
-/**
- * Quantifier to match the preceding element once or not at all
- * @type {RegexQuantifier}
- */
-RegexQuantifier.noneOrOne = new RegexQuantifier("?", true);
+  /**
+   * Quantifier to match the preceding element once or not at all
+   * @type {RegexQuantifier}
+   */
+  static noneOrOne = new RegexQuantifier("?", true, RegexQuantifier.#privateToken);
 
-/**
- * Quantifier to match an exact number of occurrences of the preceding element
- * @param times The exact number of occurrences to match
- * @returns {RegexQuantifier}
- */
-RegexQuantifier.exactly = function (times) {
-  return new RegexQuantifier("{" + times + "}", false);
-};
+  /**
+   * Quantifier to match an exact number of occurrences of the preceding element
+   * @param times The exact number of occurrences to match
+   * @returns {RegexQuantifier}
+   */
+  static exactly(times) {
+    return new RegexQuantifier("{" + times + "}", false, RegexQuantifier.#privateToken);
+  }
 
-/**
- * Quantifier to match at least a minimum number of occurrences of the preceding element
- * @param minimum   The minimum number of occurrences to match
- * @returns {RegexQuantifier}
- */
-RegexQuantifier.atLeast = function (minimum) {
-  return new RegexQuantifier("{" + minimum + ",}", true);
-};
+  /**
+   * Quantifier to match at least a minimum number of occurrences of the preceding element
+   * @param minimum   The minimum number of occurrences to match
+   * @returns {RegexQuantifier}
+   */
+  static atLeast(minimum) {
+    return new RegexQuantifier("{" + minimum + ",}", true, RegexQuantifier.#privateToken);
+  }
 
-/**
- * Quantifier to match no more than a maximum number of occurrences of the preceding element
- * @param maximum   The maximum number of occurrences to match
- * @returns {RegexQuantifier}
- */
-RegexQuantifier.noMoreThan = function (maximum) {
-  return new RegexQuantifier("{0," + maximum + "}", true);
-};
+  /**
+   * Quantifier to match no more than a maximum number of occurrences of the preceding element
+   * @param maximum   The maximum number of occurrences to match
+   * @returns {RegexQuantifier}
+   */
+  static noMoreThan(maximum) {
+    return new RegexQuantifier("{0," + maximum + "}", true, RegexQuantifier.#privateToken);
+  }
 
-/**
- * Quantifier to match at least a minimum, and no more than a maximum, occurrences of the preceding element
- * @param minimum   The minimum number of occurrences to match
- * @param maximum   The maximum number of occurrences to match
- * @returns {RegexQuantifier}
- */
-RegexQuantifier.between = function (minimum, maximum) {
-  return new RegexQuantifier("{" + minimum + "," + maximum + "}", true);
-};
+  /**
+   * Quantifier to match at least a minimum, and no more than a maximum, occurrences of the preceding element
+   * @param minimum   The minimum number of occurrences to match
+   * @param maximum   The maximum number of occurrences to match
+   * @returns {RegexQuantifier}
+   */
+  static between(minimum, maximum) {
+    return new RegexQuantifier("{" + minimum + "," + maximum + "}", true, RegexQuantifier.#privateToken);
+  }
+}
 
 
 // ---------- RegexOptions ----------
@@ -108,7 +103,7 @@ RegexQuantifier.between = function (minimum, maximum) {
  *
  * @type {{MATCH_ALL: string, IGNORE_CASE: string, MULTI_LINE: string}}
  */
-var RegexOptions = {
+const RegexOptions = Object.freeze({
   /**
    * Make the regex case-insensitive
    */
@@ -123,7 +118,7 @@ var RegexOptions = {
    * Cause startOfString() and endOfString() to also match line breaks within a multi-line string
    */
   MULTI_LINE: "option-multi-line"
-};
+});
 
 
 // ---------- RegexBuilder ----------
@@ -140,14 +135,24 @@ var RegexOptions = {
  *                 .buildRegex();
  * @constructor
  */
-var RegexBuilder = function () {
-  var _openGroupCount = 0;
-  var _regexString = "";
-
+class RegexBuilder {
+  #openGroupCount = 0;
+  #regexString = "";
 
   // PRIVATE METHODS
 
-  var makeSafeForRegex = function (text) {
+  #addQuantifier(quantifier) {
+    if (!quantifier) {
+      return this;
+    }
+    if (!(quantifier instanceof RegexQuantifier)) {
+      throw new Error("quantifier must be a RegexQuantifier");
+    }
+    this.#regexString += quantifier.regexString;
+    return this;
+  }
+
+  static #makeSafeForRegex(text) {
     return text
         .replace("\\", "\\\\") // Make sure this always comes first!
         .replace("?", "\\?")
@@ -163,11 +168,11 @@ var RegexBuilder = function () {
         .replace("{", "\\{")
         .replace("}", "\\}")
         .replace("|", "\\|");
-  };
+  }
 
-  var makeSafeForCharacterClass = function (text) {
+  static #makeSafeForCharacterClass(text) {
     // Replace ] with \]
-    var result = text.replace("]", "\\]");
+    let result = text.replace("]", "\\]");
 
     // Replace - with \-
     result = result.replace("-", "\\-");
@@ -178,21 +183,11 @@ var RegexBuilder = function () {
     }
 
     return result;
-  };
+  }
 
-  var addQuantifier = function (quantifier) {
-    if (!quantifier) {
-      return;
-    }
-    if (!(quantifier instanceof RegexQuantifier)) {
-      throw new Error("quantifier must be a RegexQuantifier");
-    }
-    _regexString += quantifier.regexString();
-  };
-
-  var isString = function (s) {
+  static #isString(s) {
     return typeof(s) === "string" || s instanceof String;
-  };
+  }
 
 
   // BUILD METHOD
@@ -204,15 +199,15 @@ var RegexBuilder = function () {
    * @param options   Array of RegexOptions values to apply to the regex
    * @returns {RegExp}
    */
-  this.buildRegex = function (options) {
-    if (_openGroupCount === 1) {
+  buildRegex(options) {
+    if (this.#openGroupCount === 1) {
       throw new Error("One group is still open");
     }
-    if (_openGroupCount > 1) {
-      throw new Error(_openGroupCount + " groups are still open");
+    if (this.#openGroupCount > 1) {
+      throw new Error(this.#openGroupCount + " groups are still open");
     }
 
-    var flags = "";
+    let flags = "";
     if (options) {
       if (!(options instanceof Array)) {
         options = [options];
@@ -228,10 +223,10 @@ var RegexBuilder = function () {
       }
     }
 
-    var regex = new RegExp(_regexString, flags);
-    _regexString = "";
+    let regex = new RegExp(this.#regexString, flags);
+    this.#regexString = "";
     return regex;
-  };
+  }
 
 
   // CHARACTER MATCHES
@@ -247,15 +242,15 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.text = function (text, quantifier) {
+  text(text, quantifier) {
     if (text === null || text === undefined || text.length === 0) {
       return this;
     }
-    if (!isString(text)) {
+    if (!RegexBuilder.#isString(text)) {
       throw new Error("text must be a string");
     }
-    return this.regexText(makeSafeForRegex(text), quantifier);
-  };
+    return this.regexText(RegexBuilder.#makeSafeForRegex(text), quantifier);
+  }
 
   /**
    * Add literal regex text to the regex. Regex special characters will NOT be escaped. Only call this if you're
@@ -269,23 +264,23 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.regexText = function (text, quantifier) {
+  regexText(text, quantifier) {
     if (text === null || text === undefined || text.length === 0) {
       return this;
     }
-    if (!isString(text)) {
+    if (!RegexBuilder.#isString(text)) {
       throw new Error("text must be a string");
     }
     if (!quantifier) {
-      _regexString += text;
+      this.#regexString += text;
       return this;
     }
 
     return this
         .startNonCapturingGroup()
-        .regexText(text)
+        .regexText(text, undefined)
         .endGroup(quantifier);
-  };
+  }
 
   /**
    * Add an element to match any character.
@@ -293,11 +288,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.anyCharacter = function (quantifier) {
-    _regexString += ".";
-    addQuantifier(quantifier);
-    return this;
-  };
+  anyCharacter(quantifier) {
+    this.#regexString += ".";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any single whitespace character.
@@ -305,11 +299,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.whitespace = function (quantifier) {
-    _regexString += "\\s";
-    addQuantifier(quantifier);
-    return this;
-  };
+  whitespace(quantifier) {
+    this.#regexString += "\\s";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any single non-whitespace character.
@@ -317,11 +310,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.nonWhitespace = function (quantifier) {
-    _regexString += "\\S";
-    addQuantifier(quantifier);
-    return this;
-  };
+  nonWhitespace(quantifier) {
+    this.#regexString += "\\S";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any single decimal digit (0-9).
@@ -329,11 +321,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.digit = function (quantifier) {
-    _regexString += "\\d";
-    addQuantifier(quantifier);
-    return this;
-  };
+  digit(quantifier) {
+    this.#regexString += "\\d";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any character that is not a decimal digit (0-9).
@@ -341,11 +332,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.nonDigit = function (quantifier) {
-    _regexString += "\\D";
-    addQuantifier(quantifier);
-    return this;
-  };
+  nonDigit(quantifier) {
+    this.#regexString += "\\D";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any letter in the Roman alphabet (a-z, A-Z).
@@ -353,11 +343,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.letter = function (quantifier) {
-    _regexString += "[a-zA-Z]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  letter(quantifier) {
+    this.#regexString += "[a-zA-Z]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any character that is not a letter in the Roman alphabet (a-z, A-Z).
@@ -365,11 +354,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.nonLetter = function (quantifier) {
-    _regexString += "[^a-zA-Z]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  nonLetter(quantifier) {
+    this.#regexString += "[^a-zA-Z]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any upper-case letter in the Roman alphabet (A-Z).
@@ -377,11 +365,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.uppercaseLetter = function (quantifier) {
-    _regexString += "[A-Z]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  uppercaseLetter(quantifier) {
+    this.#regexString += "[A-Z]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any lowercase letter in the Roman alphabet (a-z).
@@ -389,11 +376,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.lowercaseLetter = function (quantifier) {
-    _regexString += "[a-z]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  lowercaseLetter(quantifier) {
+    this.#regexString += "[a-z]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any letter in the Roman alphabet or decimal digit (a-z, A-Z, 0-9).
@@ -401,11 +387,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.letterOrDigit = function (quantifier) {
-    _regexString += "[a-zA-Z0-9]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  letterOrDigit(quantifier) {
+    this.#regexString += "[a-zA-Z0-9]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any character that is not letter in the Roman alphabet or a decimal digit (a-z, A-Z, 0-9).
@@ -413,11 +398,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.nonLetterOrDigit = function (quantifier) {
-    _regexString += "[^a-zA-Z0-9]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  nonLetterOrDigit(quantifier) {
+    this.#regexString += "[^a-zA-Z0-9]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any hexadecimal digit (a-f, A-F, 0-9).
@@ -425,11 +409,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.hexDigit = function (quantifier) {
-    _regexString += "[0-9A-Fa-f]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  hexDigit(quantifier) {
+    this.#regexString += "[0-9A-Fa-f]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any uppercase hexadecimal digit (A-F, 0-9).
@@ -437,11 +420,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.uppercaseHexDigit = function (quantifier) {
-    _regexString += "[0-9A-F]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  uppercaseHexDigit(quantifier) {
+    this.#regexString += "[0-9A-F]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any lowercase hexadecimal digit (a-f, 0-9).
@@ -449,11 +431,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.lowercaseHexDigit = function (quantifier) {
-    _regexString += "[0-9a-f]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  lowercaseHexDigit(quantifier) {
+    this.#regexString += "[0-9a-f]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any character that is not a hexadecimal digit (a-f, A-F, 0-9).
@@ -461,11 +442,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.nonHexDigit = function (quantifier) {
-    _regexString += "[^0-9A-Fa-f]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  nonHexDigit(quantifier) {
+    this.#regexString += "[^0-9A-Fa-f]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any Roman alphabet letter, decimal digit, or underscore (a-z, A-Z, 0-9, _).
@@ -473,11 +453,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.wordCharacter = function (quantifier) {
-    _regexString += "\\w";
-    addQuantifier(quantifier);
-    return this;
-  };
+  wordCharacter(quantifier) {
+    this.#regexString += "\\w";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element to match any character that is not a Roman alphabet letter, decimal digit, or underscore
@@ -486,11 +465,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.nonWordCharacter = function (quantifier) {
-    _regexString += "\\W";
-    addQuantifier(quantifier);
-    return this;
-  };
+  nonWordCharacter(quantifier) {
+    this.#regexString += "\\W";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element (a character class) to match any of the characters provided.
@@ -499,11 +477,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.anyCharacterFrom = function (characters, quantifier) {
-    _regexString += "[" + makeSafeForCharacterClass(characters) + "]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  anyCharacterFrom(characters, quantifier) {
+    this.#regexString += "[" + RegexBuilder.#makeSafeForCharacterClass(characters) + "]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add an element (a character class) to match any character except those provided.
@@ -512,11 +489,10 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.anyCharacterExcept = function (characters, quantifier) {
-    _regexString += "[^" + makeSafeForCharacterClass(characters) + "]";
-    addQuantifier(quantifier);
-    return this;
-  };
+  anyCharacterExcept(characters, quantifier) {
+    this.#regexString += "[^" + RegexBuilder.#makeSafeForCharacterClass(characters) + "]";
+    return this.#addQuantifier(quantifier);
+  }
 
   /**
    * Add a group of alternatives, to match any of the strings provided.
@@ -525,7 +501,7 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
-  this.anyOf = function (textArray, quantifier) {
+  anyOf(textArray, quantifier) {
     if (textArray === null || textArray === undefined) {
       return this;
     }
@@ -540,15 +516,16 @@ var RegexBuilder = function () {
           .startNonCapturingGroup()
           .regexText(textArray
               .map(function (t) {
-                return makeSafeForRegex(t);
+                return RegexBuilder.#makeSafeForRegex(t);
               })
-              .join("|")
+              .join("|"),
+              undefined
           )
           .endGroup(quantifier);
     }
 
     return this;
-  };
+  }
 
 
   // ANCHORS (ZERO-WIDTH ASSERTIONS)
@@ -558,20 +535,20 @@ var RegexBuilder = function () {
    *
    * @returns {RegexBuilder}
    */
-  this.startOfString = function () {
-    _regexString += "^";
+  startOfString() {
+    this.#regexString += "^";
     return this;
-  };
+  }
 
   /**
    * Add a zero-width anchor element to match the end of the string.
    *
    * @returns {RegexBuilder}
    */
-  this.endOfString = function () {
-    _regexString += "$";
+  endOfString() {
+    this.#regexString += "$";
     return this;
-  };
+  }
 
   /**
    * Add a zero-width anchor element to match the boundary between an alphanumeric/underscore character and either a
@@ -579,10 +556,10 @@ var RegexBuilder = function () {
    *
    * @returns {RegexBuilder}
    */
-  this.wordBoundary = function () {
-    _regexString += "\\b";
+  wordBoundary() {
+    this.#regexString += "\\b";
     return this;
-  };
+  }
 
 
   // GROUPING
@@ -598,11 +575,11 @@ var RegexBuilder = function () {
    *
    * @returns {RegexBuilder}
    */
-  this.startGroup = function () {
-    _regexString += "(";
-    _openGroupCount++;
+  startGroup() {
+    this.#regexString += "(";
+    this.#openGroupCount++;
     return this;
-  };
+  }
 
   /**
    * Start a non-capturing group. Non-capturing groups group part of the expression so it can have quantifiers applied
@@ -615,11 +592,11 @@ var RegexBuilder = function () {
    *
    * @returns {RegexBuilder}
    */
-  this.startNonCapturingGroup = function () {
-    _regexString += "(?:";
-    _openGroupCount++;
+  startNonCapturingGroup() {
+    this.#regexString += "(?:";
+    this.#openGroupCount++;
     return this;
-  };
+  }
 
   /**
    * End the innermost group previously started with startGroup() or startNonCapturingGroup().
@@ -627,14 +604,12 @@ var RegexBuilder = function () {
    * @param quantifier    (Optional) Quantifier to apply to this group
    * @returns {RegexBuilder}
    */
-  this.endGroup = function (quantifier) {
-    if (_openGroupCount === 0) {
+  endGroup(quantifier) {
+    if (this.#openGroupCount === 0) {
       throw new Error("Cannot call endGroup() until a group has been started with startGroup()");
     }
-    _regexString += ")";
-    _openGroupCount--;
-    addQuantifier(quantifier);
-    return this;
-  };
-};
-
+    this.#regexString += ")";
+    this.#openGroupCount--;
+    return this.#addQuantifier(quantifier);
+  }
+}
