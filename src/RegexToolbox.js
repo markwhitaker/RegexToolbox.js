@@ -18,16 +18,16 @@ Array.prototype.has = function (item) {
 class RegexQuantifier {
   static #privateToken = {}
 
-  constructor(regexString, greedy, token) {
+  constructor(regexString, isGreedy, token) {
     if (token !== RegexQuantifier.#privateToken) {
       throw new Error("RegexQuantifier constructor is private");
     }
     this.#regexString = regexString;
-    this.#greedy = greedy;
+    this.#isGreedy = isGreedy;
   }
 
   butAsFewAsPossible() {
-    if (!this.#greedy) {
+    if (!this.#isGreedy) {
       throw new Error("butAsFewAsPossible() can't be called on this quantifier")
     }
     return new RegexQuantifier(_regexString + "?", false, RegexQuantifier.#privateToken);
