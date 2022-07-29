@@ -53,12 +53,12 @@ workflows:
   version: 2
   test-deploy:
     jobs:
-      - test:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only: /.*/
+#      - test:
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              only: /.*/
       - deploy:
 #          requires:
 #            - test
