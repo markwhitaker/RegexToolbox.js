@@ -609,9 +609,9 @@ var runAllTests = function(QUnit) {
     {
         assert.throws(
             function(){
-                new RegexQuantifier(1);
+                new RegexQuantifier("test");
             },
-            new Error("Invalid regexString")
+            new Error("RegexQuantifier constructor is private")
         );
     });
 
