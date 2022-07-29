@@ -15,89 +15,82 @@ Array.prototype.has = function (item) {
 
 // ---------- RegexQuantifier ----------
 
-/**
- * Quantifiers that can be applied to regex elements or groups.
- * Don't call this directly: instead use the class properties and methods
- * such as RegexQuantifier.zeroOrMore.
- *
- * @param regexString   A valid regex quantifier string
- * @param greedy        Whether this quantifier is greedy
- * @constructor
- */
-var RegexQuantifier = function (regexString, greedy) {
-  var validPattern = /(\*|\+|\?|{\d+}|{\d+,}|{\d+,\d+})\??/;
+class RegexQuantifier {
+  static #privateToken = {}
 
-  if (!validPattern.test(regexString)) {
-    throw new Error("Invalid regexString");
+  constructor(regexString, greedy, token) {
+    if (token !== RegexQuantifier.#privateToken) {
+      throw new Error("RegexQuantifier constructor is private");
+    }
+    this.#regexString = regexString;
+    this.#greedy = greedy;
   }
 
-  var _regexString = regexString;
-
-  this.butAsFewAsPossible = function () {
-    if (!greedy) {
+  butAsFewAsPossible() {
+    if (!this.#greedy) {
       throw new Error("butAsFewAsPossible() can't be called on this quantifier")
     }
-    return new RegexQuantifier(_regexString + "?", false);
+    return new RegexQuantifier(_regexString + "?", false, RegexQuantifier.#privateToken);
+  }
+
+  get regexString() {
+    return this.#regexString;
   };
 
-  this.regexString = function () {
-    return _regexString;
+  /**
+   * Quantifier to match the preceding element zero or more times
+   * @type {RegexQuantifier}
+   */
+  static zeroOrMore = new RegexQuantifier("*", true, RegexQuantifier.#privateToken);
+
+  /**
+   * Quantifier to match the preceding element one or more times
+   * @type {RegexQuantifier}
+   */
+  static oneOrMore = new RegexQuantifier("+", true, RegexQuantifier.#privateToken);
+
+  /**
+   * Quantifier to match the preceding element once or not at all
+   * @type {RegexQuantifier}
+   */
+  static noneOrOne = new RegexQuantifier("?", true, RegexQuantifier.#privateToken);
+
+  /**
+   * Quantifier to match an exact number of occurrences of the preceding element
+   * @param times The exact number of occurrences to match
+   * @returns {RegexQuantifier}
+   */
+  static exactly(times) {
+    return new RegexQuantifier("{" + times + "}", false, RegexQuantifier.#privateToken);
   };
-};
 
-/**
- * Quantifier to match the preceding element zero or more times
- * @type {RegexQuantifier}
- */
-RegexQuantifier.zeroOrMore = new RegexQuantifier("*", true);
+  /**
+   * Quantifier to match at least a minimum number of occurrences of the preceding element
+   * @param minimum   The minimum number of occurrences to match
+   * @returns {RegexQuantifier}
+   */
+  static atLeast(minimum) {
+    return new RegexQuantifier("{" + minimum + ",}", true, RegexQuantifier.#privateToken);
+  };
 
-/**
- * Quantifier to match the preceding element one or more times
- * @type {RegexQuantifier}
- */
-RegexQuantifier.oneOrMore = new RegexQuantifier("+", true);
+  /**
+   * Quantifier to match no more than a maximum number of occurrences of the preceding element
+   * @param maximum   The maximum number of occurrences to match
+   * @returns {RegexQuantifier}
+   */
+  static noMoreThan(maximum) {
+    return new RegexQuantifier("{0," + maximum + "}", true, RegexQuantifier.#privateToken);
+  };
 
-/**
- * Quantifier to match the preceding element once or not at all
- * @type {RegexQuantifier}
- */
-RegexQuantifier.noneOrOne = new RegexQuantifier("?", true);
-
-/**
- * Quantifier to match an exact number of occurrences of the preceding element
- * @param times The exact number of occurrences to match
- * @returns {RegexQuantifier}
- */
-RegexQuantifier.exactly = function (times) {
-  return new RegexQuantifier("{" + times + "}", false);
-};
-
-/**
- * Quantifier to match at least a minimum number of occurrences of the preceding element
- * @param minimum   The minimum number of occurrences to match
- * @returns {RegexQuantifier}
- */
-RegexQuantifier.atLeast = function (minimum) {
-  return new RegexQuantifier("{" + minimum + ",}", true);
-};
-
-/**
- * Quantifier to match no more than a maximum number of occurrences of the preceding element
- * @param maximum   The maximum number of occurrences to match
- * @returns {RegexQuantifier}
- */
-RegexQuantifier.noMoreThan = function (maximum) {
-  return new RegexQuantifier("{0," + maximum + "}", true);
-};
-
-/**
- * Quantifier to match at least a minimum, and no more than a maximum, occurrences of the preceding element
- * @param minimum   The minimum number of occurrences to match
- * @param maximum   The maximum number of occurrences to match
- * @returns {RegexQuantifier}
- */
-RegexQuantifier.between = function (minimum, maximum) {
-  return new RegexQuantifier("{" + minimum + "," + maximum + "}", true);
+  /**
+   * Quantifier to match at least a minimum, and no more than a maximum, occurrences of the preceding element
+   * @param minimum   The minimum number of occurrences to match
+   * @param maximum   The maximum number of occurrences to match
+   * @returns {RegexQuantifier}
+   */
+  static between(minimum, maximum) {
+    return new RegexQuantifier("{" + minimum + "," + maximum + "}", true, RegexQuantifier.#privateToken);
+  };
 };
 
 
@@ -108,7 +101,7 @@ RegexQuantifier.between = function (minimum, maximum) {
  *
  * @type {{MATCH_ALL: string, IGNORE_CASE: string, MULTI_LINE: string}}
  */
-var RegexOptions = {
+var RegexOptions = Object.freeze({
   /**
    * Make the regex case-insensitive
    */
@@ -123,7 +116,7 @@ var RegexOptions = {
    * Cause startOfString() and endOfString() to also match line breaks within a multi-line string
    */
   MULTI_LINE: "option-multi-line"
-};
+});
 
 
 // ---------- RegexBuilder ----------
@@ -187,7 +180,7 @@ var RegexBuilder = function () {
     if (!(quantifier instanceof RegexQuantifier)) {
       throw new Error("quantifier must be a RegexQuantifier");
     }
-    _regexString += quantifier.regexString();
+    _regexString += quantifier.regexString;
   };
 
   var isString = function (s) {
@@ -637,4 +630,3 @@ var RegexBuilder = function () {
     return this;
   };
 };
-
