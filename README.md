@@ -1,6 +1,6 @@
 ![icon](artwork/RegexToolbox-icon-100.png)
 
-# RegexToolbox.JS
+# RegexToolbox.JS ![https://www.npmjs.com/package/@markwhitaker/regextoolbox](https://img.shields.io/npm/dw/@markwhitaker/regextoolbox)
 
 Regular expression tools for JavaScript developers.
 

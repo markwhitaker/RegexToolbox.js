@@ -1,0 +1,17 @@
+{
+  "name": "@markwhitaker/regextoolbox",
+  "description": "Regular expression tools for JavaScript developers",
+  "main": "src/RegexToolbox.js",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markwhitaker/RegexToolbox.JS"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "regex",
+    "regular expression",
+    "regular expressions",
+    "pattern matching"
+  ]
+}
