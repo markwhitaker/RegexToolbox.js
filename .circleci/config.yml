@@ -1,7 +1,3 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check {{ '/language-javascript' | docs_url }} for more details
-#
 version: 2
 
 defaults: &defaults
@@ -22,9 +18,9 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
-      # - run:
-      #     name: Run tests
-      #     command: npm test
+      - run:
+          name: Run tests
+          command: echo "TODO run npm test"
 
       - save_cache:
           paths:
