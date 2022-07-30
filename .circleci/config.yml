@@ -22,9 +22,9 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
-      - run:
-          name: Run tests
-          command: npm test
+      # - run:
+      #     name: Run tests
+      #     command: npm test
 
       - save_cache:
           paths:
@@ -53,15 +53,15 @@ workflows:
   version: 2
   test-deploy:
     jobs:
-#      - test:
-#          filters:
-#            tags:
-#              only: /.*/
-#            branches:
-#              only: /.*/
+     - test:
+         filters:
+           tags:
+             only: /.*/
+           branches:
+             only: /.*/
       - deploy:
-#          requires:
-#            - test
+         requires:
+           - test
           filters:
             tags:
               # Only tags beginning x.y.z
