@@ -1,9 +1,10 @@
 {
   "name": "regextoolbox",
   "description": "Regular expression tools for JavaScript developers",
+  "author": "Mark Whitaker",
   "type": "module",
   "main": "src/index.js",
-  "version": "0.0.5",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/markwhitaker/RegexToolbox.JS"
