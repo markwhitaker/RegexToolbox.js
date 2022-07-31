@@ -1,8 +1,9 @@
 {
-  "name": "@markwhitaker/regextoolbox",
+  "name": "regextoolbox",
   "description": "Regular expression tools for JavaScript developers",
-  "main": "src/RegexToolbox.js",
-  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.js",
+  "version": "0.0.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/markwhitaker/RegexToolbox.JS"
@@ -13,5 +14,11 @@
     "regular expression",
     "regular expressions",
     "pattern matching"
-  ]
+  ],
+  "scripts": {
+    "test": "qunit"
+  },
+  "devDependencies": {
+    "qunit": "^2.19.1"
+  }
 }

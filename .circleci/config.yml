@@ -20,7 +20,7 @@ jobs:
       - run: npm install
       - run:
           name: Run tests
-          command: echo "TODO run npm test"
+          command: npm test
 
       - save_cache:
           paths:

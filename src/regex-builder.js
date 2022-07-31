@@ -1,127 +1,7 @@
 "use strict";
 
-
-// ---------- Extensions ----------
-
-/**
- * Return true if the array contains the supplied item
- * @param item  Item to find
- * @returns {boolean}
- */
-Array.prototype.has = function (item) {
-  return this.indexOf(item) > -1;
-};
-
-
-// ---------- RegexQuantifier ----------
-
-class RegexQuantifier {
-  static #privateToken = {}
-  #regexString = ""
-  #isGreedy = false
-
-  constructor(regexString, isGreedy, token) {
-    if (token !== RegexQuantifier.#privateToken) {
-      throw new Error("RegexQuantifier constructor is private");
-    }
-    this.#regexString = regexString;
-    this.#isGreedy = isGreedy;
-  }
-
-  butAsFewAsPossible() {
-    if (!this.#isGreedy) {
-      throw new Error("butAsFewAsPossible() can't be called on this quantifier")
-    }
-    return new RegexQuantifier(this.#regexString + "?", false, RegexQuantifier.#privateToken);
-  }
-
-  get regexString() {
-    return this.#regexString;
-  }
-
-  /**
-   * Quantifier to match the preceding element zero or more times
-   * @type {RegexQuantifier}
-   */
-  static zeroOrMore = new RegexQuantifier("*", true, RegexQuantifier.#privateToken);
-
-  /**
-   * Quantifier to match the preceding element one or more times
-   * @type {RegexQuantifier}
-   */
-  static oneOrMore = new RegexQuantifier("+", true, RegexQuantifier.#privateToken);
-
-  /**
-   * Quantifier to match the preceding element once or not at all
-   * @type {RegexQuantifier}
-   */
-  static noneOrOne = new RegexQuantifier("?", true, RegexQuantifier.#privateToken);
-
-  /**
-   * Quantifier to match an exact number of occurrences of the preceding element
-   * @param times The exact number of occurrences to match
-   * @returns {RegexQuantifier}
-   */
-  static exactly(times) {
-    return new RegexQuantifier("{" + times + "}", false, RegexQuantifier.#privateToken);
-  }
-
-  /**
-   * Quantifier to match at least a minimum number of occurrences of the preceding element
-   * @param minimum   The minimum number of occurrences to match
-   * @returns {RegexQuantifier}
-   */
-  static atLeast(minimum) {
-    return new RegexQuantifier("{" + minimum + ",}", true, RegexQuantifier.#privateToken);
-  }
-
-  /**
-   * Quantifier to match no more than a maximum number of occurrences of the preceding element
-   * @param maximum   The maximum number of occurrences to match
-   * @returns {RegexQuantifier}
-   */
-  static noMoreThan(maximum) {
-    return new RegexQuantifier("{0," + maximum + "}", true, RegexQuantifier.#privateToken);
-  }
-
-  /**
-   * Quantifier to match at least a minimum, and no more than a maximum, occurrences of the preceding element
-   * @param minimum   The minimum number of occurrences to match
-   * @param maximum   The maximum number of occurrences to match
-   * @returns {RegexQuantifier}
-   */
-  static between(minimum, maximum) {
-    return new RegexQuantifier("{" + minimum + "," + maximum + "}", true, RegexQuantifier.#privateToken);
-  }
-}
-
-
-// ---------- RegexOptions ----------
-
-/**
- * Options that can be passed to RegexBuilder.buildRegex()
- *
- * @type {{MATCH_ALL: string, IGNORE_CASE: string, MULTI_LINE: string}}
- */
-const RegexOptions = Object.freeze({
-  /**
-   * Make the regex case-insensitive
-   */
-  IGNORE_CASE: "option-ignore-case",
-
-  /**
-   * Make the regex match all occurrences in a string rather than just the first
-   */
-  MATCH_ALL: "option-match-all",
-
-  /**
-   * Cause startOfString() and endOfString() to also match line breaks within a multi-line string
-   */
-  MULTI_LINE: "option-multi-line"
-});
-
-
-// ---------- RegexBuilder ----------
+import RegexOptions from "./regex-options.js";
+import RegexQuantifier from "./regex-quantifier.js";
 
 /**
  * Class to build regular expressions in a more human-readable way using a fluent API.
@@ -135,7 +15,7 @@ const RegexOptions = Object.freeze({
  *                 .buildRegex();
  * @constructor
  */
-class RegexBuilder {
+export default class RegexBuilder {
   #openGroupCount = 0;
   #regexString = "";
 
@@ -212,13 +92,13 @@ class RegexBuilder {
       if (!(options instanceof Array)) {
         options = [options];
       }
-      if (options.has(RegexOptions.MATCH_ALL)) {
+      if (options.indexOf(RegexOptions.MATCH_ALL) > -1) {
         flags += "g";
       }
-      if (options.has(RegexOptions.IGNORE_CASE)) {
+      if (options.indexOf(RegexOptions.IGNORE_CASE) > -1) {
         flags += "i";
       }
-      if (options.has(RegexOptions.MULTI_LINE)) {
+      if (options.indexOf(RegexOptions.MULTI_LINE) > -1) {
         flags += "m";
       }
     }
