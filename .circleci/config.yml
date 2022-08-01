@@ -42,7 +42,7 @@ jobs:
           name: Publish package (versioned by git tag)
           command: |
             npm config set git-tag-version=false
-            npm version $(git describe --tags)
+            npm version $CIRCLE_TAG
             npm publish
 
 workflows:
