@@ -2,7 +2,7 @@
 
 import {RegexBuilder, RegexOptions, RegexQuantifier} from "../src/index.js";
 
-QUnit.module("RegexBuilder tests");
+QUnit.module("RegexBuilder");
 
 QUnit.test("Test text()", assert => {
     const regex = new RegexBuilder()
@@ -524,15 +524,6 @@ QUnit.test("Test butAsFewAsPossible().butAsFewAsPossible() error ", function (as
                 .buildRegex();
         },
         new Error("butAsFewAsPossible() can't be called on this quantifier")
-    );
-});
-
-QUnit.test("Test RegexQuantifier constructor error", function (assert) {
-    assert.throws(
-        function () {
-            new RegexQuantifier("test");
-        },
-        new Error("RegexQuantifier constructor is private")
     );
 });
 
