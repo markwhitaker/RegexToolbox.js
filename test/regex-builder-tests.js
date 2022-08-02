@@ -1,6 +1,6 @@
 "use strict";
 
-import {RegexOptions, RegexQuantifier, RegexBuilder} from "../src/index.js";
+import {RegexOptions, RegexQuantifier, RegexBuilder} from "../index.js";
 
 QUnit.module("RegexBuilder");
 
