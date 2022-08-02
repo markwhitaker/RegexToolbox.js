@@ -1,9 +1,14 @@
 ![icon](artwork/RegexToolbox-icon-100.png)
 
-# RegexToolbox.JS
+# RegexToolbox.JS [![CircleCI](https://img.shields.io/circleci/build/gh/markwhitaker/RegexToolbox.JS)](https://circleci.com/gh/markwhitaker/RegexToolbox.JS) [![npm](https://img.shields.io/npm/v/regextoolbox)](https://www.npmjs.com/package/regextoolbox) [![npm](https://img.shields.io/npm/dw/regextoolbox)](https://www.npmjs.com/package/regextoolbox)
 
 Regular expression tools for JavaScript developers.
 
+## Installation
+
+```
+npm i regextoolbox
+```
 
 ## RegexBuilder
 
