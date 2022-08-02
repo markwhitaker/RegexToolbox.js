@@ -37,7 +37,7 @@ jobs:
           at: ~/repo
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
       - run:
           name: Publish package (versioned by git tag)
           command: |
@@ -56,6 +56,8 @@ workflows:
             branches:
               only: /.*/
       - deploy:
+          # Add to PublishToNpm context to access the NPM_TOKEN environment variable
+          context: PublishToNpm
           requires:
             - test
           filters:
