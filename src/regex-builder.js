@@ -315,24 +315,23 @@ export default class RegexBuilder {
   }
 
   /**
-   * Add an element to match any Roman alphabet letter, decimal digit, or underscore (a-z, A-Z, 0-9, _).
+   * Add an element to match any Unicode alphabet letter, decimal digit, or underscore.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   wordCharacter(quantifier = undefined) {
-    return this.#addPart("\\w", quantifier);
+    return this.#addPart("[\\p{L}0-9_]", quantifier);
   }
 
   /**
-   * Add an element to match any character that is not a Roman alphabet letter, decimal digit, or underscore
-   * (a-z, A-Z, 0-9, _)
+   * Add an element to match any character that is not a Unicode alphabet letter, decimal digit, or underscore.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   nonWordCharacter(quantifier = undefined) {
-    return this.#addPart("\\W", quantifier);
+    return this.#addPart("[^\\p{L}0-9_]", quantifier);
   }
 
   /**
