@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Publish" type="js.build_tools.npm">
-    <package-json value="$PROJECT_DIR$/src/package.json" />
+  <configuration default="false" name="publish" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/package.json" />
     <command value="publish" />
     <node-interpreter value="project" />
     <envs />

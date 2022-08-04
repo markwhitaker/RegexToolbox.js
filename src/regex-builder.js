@@ -18,6 +18,7 @@ import RegexQuantifier from "./regex-quantifier.js";
 export default class RegexBuilder {
   #openGroupCount = 0;
   #regexString = "";
+  #flags = new Set();
 
   /**
    * Build and return a RegExp object from the current builder state.
@@ -26,7 +27,7 @@ export default class RegexBuilder {
    * @param options   Array of RegexOptions values to apply to the regex
    * @returns {RegExp}
    */
-  buildRegex(options = []) {
+  buildRegex(options = undefined) {
     if (this.#openGroupCount === 1) {
       throw new Error("One group is still open");
     }
@@ -34,24 +35,23 @@ export default class RegexBuilder {
       throw new Error(this.#openGroupCount + " groups are still open");
     }
 
-    let flags = "";
     if (options) {
       if (!(options instanceof Array)) {
         options = [options];
       }
-      if (options.indexOf(RegexOptions.MATCH_ALL) > -1) {
-        flags += "g";
+      if (!options.every(x => x instanceof RegexOptions)) {
+        throw new Error("All options passed to constructor must be of type RegexOptions");
       }
-      if (options.indexOf(RegexOptions.IGNORE_CASE) > -1) {
-        flags += "i";
-      }
-      if (options.indexOf(RegexOptions.MULTI_LINE) > -1) {
-        flags += "m";
-      }
+      options
+          .map(opt => opt.string)
+          .forEach(str => this.#flags.add(str));
     }
 
-    let regex = new RegExp(this.#regexString, flags);
+    let flagsStr = "";
+    this.#flags.forEach(flagStr => flagsStr += flagStr);
+    const regex = new RegExp(this.#regexString, flagsStr);
     this.#regexString = "";
+    this.#flags.clear();
     return regex;
   }
 
@@ -209,63 +209,69 @@ export default class RegexBuilder {
   }
 
   /**
-   * Add an element to match any letter in the Roman alphabet (a-z, A-Z).
+   * Add an element to match any Unicode letter.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   letter(quantifier = undefined) {
-    return this.#addPart("[a-zA-Z]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("\\p{L}", quantifier);
   }
 
   /**
-   * Add an element to match any character that is not a letter in the Roman alphabet (a-z, A-Z).
+   * Add an element to match any character that is not a Unicode letter.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   nonLetter(quantifier = undefined) {
-    return this.#addPart("[^a-zA-Z]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("\\P{L}", quantifier);
   }
 
   /**
-   * Add an element to match any upper-case letter in the Roman alphabet (A-Z).
+   * Add an element to match any upper-case Unicode letter.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   uppercaseLetter(quantifier = undefined) {
-    return this.#addPart("[A-Z]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("\\p{Lu}", quantifier);
   }
 
   /**
-   * Add an element to match any lowercase letter in the Roman alphabet (a-z).
+   * Add an element to match any lowercase Unicode letter.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   lowercaseLetter(quantifier = undefined) {
-    return this.#addPart("[a-z]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("\\p{Ll}", quantifier);
   }
 
   /**
-   * Add an element to match any letter in the Roman alphabet or decimal digit (a-z, A-Z, 0-9).
+   * Add an element to match any Unicode letter or decimal digit (0-9).
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   letterOrDigit(quantifier = undefined) {
-    return this.#addPart("[a-zA-Z0-9]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("[\\p{L}0-9]", quantifier);
   }
 
   /**
-   * Add an element to match any character that is not letter in the Roman alphabet or a decimal digit (a-z, A-Z, 0-9).
+   * Add an element to match any character that is not a Unicode letter or a decimal digit (0-9).
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   nonLetterOrDigit(quantifier = undefined) {
-    return this.#addPart("[^a-zA-Z0-9]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("[^\\p{L}0-9]", quantifier);
   }
 
   /**
@@ -309,24 +315,25 @@ export default class RegexBuilder {
   }
 
   /**
-   * Add an element to match any Roman alphabet letter, decimal digit, or underscore (a-z, A-Z, 0-9, _).
+   * Add an element to match any Unicode alphabet letter, decimal digit, or underscore.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   wordCharacter(quantifier = undefined) {
-    return this.#addPart("\\w", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("[\\p{L}0-9_]", quantifier);
   }
 
   /**
-   * Add an element to match any character that is not a Roman alphabet letter, decimal digit, or underscore
-   * (a-z, A-Z, 0-9, _)
+   * Add an element to match any character that is not a Unicode alphabet letter, decimal digit, or underscore.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   nonWordCharacter(quantifier = undefined) {
-    return this.#addPart("\\W", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("[^\\p{L}0-9_]", quantifier);
   }
 
   /**
@@ -472,6 +479,10 @@ export default class RegexBuilder {
     }
     this.#regexString += quantifier.regexString;
     return this;
+  }
+
+  #addUnicodeFlag() {
+    this.#flags.add("u");
   }
 
   static #makeSafeForRegex(text) {

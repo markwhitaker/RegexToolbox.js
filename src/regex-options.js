@@ -2,24 +2,34 @@
 
 /**
  * Options that can be passed to RegexBuilder.buildRegex()
- *
- * @type {{MATCH_ALL: string, IGNORE_CASE: string, MULTI_LINE: string}}
  */
-const RegexOptions = Object.freeze({
+export default class RegexOptions {
+    static #privateToken = {}
+    #str = "";
+
+    constructor(str, token) {
+        if (token !== RegexOptions.#privateToken) {
+            throw new Error("RegexOptions constructor is private");
+        }
+        this.#str = str;
+    }
+
+    get string() {
+        return this.#str;
+    }
+
     /**
      * Make the regex case-insensitive
      */
-    IGNORE_CASE: "option-ignore-case",
+    static IGNORE_CASE = new RegexOptions("i", RegexOptions.#privateToken);
 
     /**
      * Make the regex match all occurrences in a string rather than just the first
      */
-    MATCH_ALL: "option-match-all",
+    static MATCH_ALL = new RegexOptions("g", RegexOptions.#privateToken);
 
     /**
      * Cause startOfString() and endOfString() to also match line breaks within a multi-line string
      */
-    MULTI_LINE: "option-multi-line"
-});
-
-export default RegexOptions;
+    static MULTI_LINE = new RegexOptions("m", RegexOptions.#privateToken);
+}
