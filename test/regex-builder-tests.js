@@ -246,7 +246,7 @@ QUnit.test("Test wordCharacter()", function (assert) {
         .wordCharacter()
         .buildRegex();
 
-    assert.equal(regex, "/[\\p{L}0-9_]/");
+    assert.equal(regex, "/[\\p{L}0-9_]/u");
 });
 
 QUnit.test("Test nonWordCharacter()", function (assert) {
@@ -254,7 +254,7 @@ QUnit.test("Test nonWordCharacter()", function (assert) {
         .nonWordCharacter()
         .buildRegex();
 
-    assert.equal(regex, "/[^\\p{L}0-9_]/");
+    assert.equal(regex, "/[^\\p{L}0-9_]/u");
 });
 
 QUnit.test("Test anyCharacterFrom()", function (assert) {

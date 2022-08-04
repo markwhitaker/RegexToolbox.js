@@ -321,6 +321,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   wordCharacter(quantifier = undefined) {
+    this.#addUnicodeFlag();
     return this.#addPart("[\\p{L}0-9_]", quantifier);
   }
 
@@ -331,6 +332,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   nonWordCharacter(quantifier = undefined) {
+    this.#addUnicodeFlag();
     return this.#addPart("[^\\p{L}0-9_]", quantifier);
   }
 
