@@ -61,6 +61,46 @@ QUnit.test("Test nonWhitespace()", function (assert) {
     assert.equal(regex.toString(), "/\\S/");
 });
 
+QUnit.test("Test possibleWhitespace()", function (assert) {
+    const regex = new RegexBuilder()
+        .possibleWhitespace()
+        .buildRegex();
+
+    assert.equal(regex.toString(), "/\\s*/");
+});
+
+QUnit.test("Test space()", function (assert) {
+    const regex = new RegexBuilder()
+        .space()
+        .buildRegex();
+
+    assert.equal(regex.toString(), "/ /");
+});
+
+QUnit.test("Test tab()", function (assert) {
+    const regex = new RegexBuilder()
+        .tab()
+        .buildRegex();
+
+    assert.equal(regex.toString(), "/\\t/");
+});
+
+QUnit.test("Test carriageReturn()", function (assert) {
+    const regex = new RegexBuilder()
+        .carriageReturn()
+        .buildRegex();
+
+    assert.equal(regex.toString(), "/\\r/");
+});
+
+QUnit.test("Test lineFeed()", function (assert) {
+    const regex = new RegexBuilder()
+        .lineFeed()
+        .buildRegex();
+
+    assert.equal(regex.toString(), "/\\n/");
+});
+
 QUnit.test("Test digit()", function (assert) {
     const regex = new RegexBuilder()
         .digit()
