@@ -126,6 +126,9 @@ QUnit.test("Test letter()", function (assert) {
     assert.true(regex.test("a"));
     assert.true(regex.test("ß"));
     assert.true(regex.test("現"));
+    assert.false(regex.test(""));
+    assert.false(regex.test("1"));
+    assert.false(regex.test("!"));
 });
 
 QUnit.test("Test nonLetter()", function (assert) {
@@ -133,7 +136,13 @@ QUnit.test("Test nonLetter()", function (assert) {
         .nonLetter()
         .buildRegex();
 
-    assert.equal(regex, "/[^a-zA-Z]/");
+    assert.equal(regex, "/\\P{L}/u");
+    assert.false(regex.test("a"));
+    assert.false(regex.test("ß"));
+    assert.false(regex.test("現"));
+    assert.false(regex.test(""));
+    assert.true(regex.test("1"));
+    assert.true(regex.test("!"));
 });
 
 QUnit.test("Test uppercaseLetter()", function (assert) {
@@ -141,7 +150,15 @@ QUnit.test("Test uppercaseLetter()", function (assert) {
         .uppercaseLetter()
         .buildRegex();
 
-    assert.equal(regex, "/[A-Z]/");
+    assert.equal(regex, "/\\p{Lu}/u");
+    assert.true(regex.test("A"));
+    assert.false(regex.test("a"));
+    assert.true(regex.test("ẞ"));
+    assert.false(regex.test("ß"));
+    assert.false(regex.test("現"));
+    assert.false(regex.test(""));
+    assert.false(regex.test("1"));
+    assert.false(regex.test("!"));
 });
 
 QUnit.test("Test lowercaseLetter()", function (assert) {
@@ -149,7 +166,15 @@ QUnit.test("Test lowercaseLetter()", function (assert) {
         .lowercaseLetter()
         .buildRegex();
 
-    assert.equal(regex, "/[a-z]/");
+    assert.equal(regex, "/\\p{Ll}/u");
+    assert.false(regex.test("A"));
+    assert.true(regex.test("a"));
+    assert.false(regex.test("ẞ"));
+    assert.true(regex.test("ß"));
+    assert.false(regex.test("現"));
+    assert.false(regex.test(""));
+    assert.false(regex.test("1"));
+    assert.false(regex.test("!"));
 });
 
 QUnit.test("Test letterOrDigit()", function (assert) {
@@ -157,7 +182,15 @@ QUnit.test("Test letterOrDigit()", function (assert) {
         .letterOrDigit()
         .buildRegex();
 
-    assert.equal(regex, "/[a-zA-Z0-9]/");
+    assert.equal(regex, "/[\\p{L}0-9]/u");
+    assert.true(regex.test("A"));
+    assert.true(regex.test("a"));
+    assert.true(regex.test("ẞ"));
+    assert.true(regex.test("ß"));
+    assert.true(regex.test("現"));
+    assert.false(regex.test(""));
+    assert.true(regex.test("1"));
+    assert.false(regex.test("!"));
 });
 
 QUnit.test("Test nonLetterOrDigit()", function (assert) {
@@ -165,7 +198,15 @@ QUnit.test("Test nonLetterOrDigit()", function (assert) {
         .nonLetterOrDigit()
         .buildRegex();
 
-    assert.equal(regex, "/[^a-zA-Z0-9]/");
+    assert.equal(regex, "/[^\\p{L}0-9]/u");
+    assert.false(regex.test("A"));
+    assert.false(regex.test("a"));
+    assert.false(regex.test("ẞ"));
+    assert.false(regex.test("ß"));
+    assert.false(regex.test("現"));
+    assert.false(regex.test(""));
+    assert.false(regex.test("1"));
+    assert.true(regex.test("!"));
 });
 
 QUnit.test("Test hexDigit()", function (assert) {
@@ -312,7 +353,7 @@ QUnit.test("Test non-capturing group", function (assert) {
         .lowercaseLetter(RegexQuantifier.oneOrMore)
         .buildRegex();
 
-    assert.equal(regex, "/[a-z]+(?:\\d+)[a-z]+/");
+    assert.equal(regex, "/\\p{Ll}+(?:\\d+)\\p{Ll}+/u");
 });
 
 QUnit.test("Test multiple groups", function (assert) {

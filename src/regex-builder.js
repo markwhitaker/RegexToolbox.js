@@ -48,7 +48,7 @@ export default class RegexBuilder {
     }
 
     let flagsStr = "";
-    this.#flags.forEach(optStr => flagsStr += optStr);
+    this.#flags.forEach(flagStr => flagsStr += flagStr);
     const regex = new RegExp(this.#regexString, flagsStr);
     this.#regexString = "";
     this.#flags.clear();
@@ -220,53 +220,58 @@ export default class RegexBuilder {
   }
 
   /**
-   * Add an element to match any character that is not a letter in the Roman alphabet (a-z, A-Z).
+   * Add an element to match any character that is not a Unicode letter.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   nonLetter(quantifier = undefined) {
-    return this.#addPart("[^a-zA-Z]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("\\P{L}", quantifier);
   }
 
   /**
-   * Add an element to match any upper-case letter in the Roman alphabet (A-Z).
+   * Add an element to match any upper-case Unicode letter.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   uppercaseLetter(quantifier = undefined) {
-    return this.#addPart("[A-Z]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("\\p{Lu}", quantifier);
   }
 
   /**
-   * Add an element to match any lowercase letter in the Roman alphabet (a-z).
+   * Add an element to match any lowercase Unicode letter.
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   lowercaseLetter(quantifier = undefined) {
-    return this.#addPart("[a-z]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("\\p{Ll}", quantifier);
   }
 
   /**
-   * Add an element to match any letter in the Roman alphabet or decimal digit (a-z, A-Z, 0-9).
+   * Add an element to match any Unicode letter or decimal digit (0-9).
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   letterOrDigit(quantifier = undefined) {
-    return this.#addPart("[a-zA-Z0-9]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("[\\p{L}0-9]", quantifier);
   }
 
   /**
-   * Add an element to match any character that is not letter in the Roman alphabet or a decimal digit (a-z, A-Z, 0-9).
+   * Add an element to match any character that is not a Unicode letter or a decimal digit (0-9).
    *
    * @param quantifier    (Optional) Quantifier to apply to this element
    * @returns {RegexBuilder}
    */
   nonLetterOrDigit(quantifier = undefined) {
-    return this.#addPart("[^a-zA-Z0-9]", quantifier);
+    this.#addUnicodeFlag();
+    return this.#addPart("[^\\p{L}0-9]", quantifier);
   }
 
   /**
