@@ -20,7 +20,7 @@ export default class RegexBuilder {
   #regexString = "";
 
   /**
-   * Build and return a Regex object from the current builder state.
+   * Build and return a RegExp object from the current builder state.
    * After calling this the builder is cleared and ready to re-use.
    *
    * @param options   Array of RegexOptions values to apply to the regex
@@ -137,6 +137,55 @@ export default class RegexBuilder {
    */
   nonWhitespace(quantifier = undefined) {
     return this.#addPart("\\S", quantifier);
+  }
+
+  /**
+   * Add an element to represent any amount of white space, including none. This is just a convenient alias for
+   * whitespace(RegexQuantifier.zeroOrMore).
+   */
+  possibleWhitespace() {
+    return this.whitespace(RegexQuantifier.zeroOrMore);
+  }
+
+  /**
+   * Add an element to match a single space character. If you want to match any kind of white space, use
+   * whitespace().
+   *
+   * @param quantifier Quantifier to apply to this element
+   * @returns {RegexBuilder}
+   */
+  space(quantifier = undefined) {
+    return this.#addPart(" ", quantifier);
+  }
+
+  /**
+   * Add an element to match a single tab character.
+   *
+   * @param quantifier Quantifier to apply to this element
+   * @returns {RegexBuilder}
+   */
+  tab(quantifier = undefined) {
+    return this.#addPart("\\t", quantifier);
+  }
+
+  /**
+   * Add an element to match a single carriage return character.
+   *
+   * @param quantifier Quantifier to apply to this element
+   * @returns {RegexBuilder}
+   */
+  carriageReturn(quantifier = undefined) {
+    return this.#addPart("\\r", quantifier);
+  }
+
+  /**
+   * Add an element to match a single line feed character.
+   *
+   * @param quantifier Quantifier to apply to this element
+   * @returns {RegexBuilder}
+   */
+  lineFeed(quantifier = undefined) {
+    return this.#addPart("\\n", quantifier);
   }
 
   /**
