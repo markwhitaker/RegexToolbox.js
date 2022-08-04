@@ -122,7 +122,10 @@ QUnit.test("Test letter()", function (assert) {
         .letter()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/[a-zA-Z]/");
+    assert.equal(regex.toString(), "/\\p{L}/u");
+    assert.true(regex.test("a"));
+    assert.true(regex.test("ß"));
+    assert.true(regex.test("現"));
 });
 
 QUnit.test("Test nonLetter()", function (assert) {
@@ -297,7 +300,7 @@ QUnit.test("Test single group", function (assert) {
         .endGroup()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/.*([a-zA-Z]\\d)/");
+    assert.equal(regex.toString(), "/.*(\\p{L}\\d)/u");
 });
 
 QUnit.test("Test non-capturing group", function (assert) {
@@ -323,7 +326,7 @@ QUnit.test("Test multiple groups", function (assert) {
         .endGroup()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/(.*)([a-zA-Z]\\d)/");
+    assert.equal(regex.toString(), "/(.*)(\\p{L}\\d)/u");
 });
 
 QUnit.test("Test nested groups", function (assert) {
@@ -338,7 +341,7 @@ QUnit.test("Test nested groups", function (assert) {
         .endGroup()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/.(.*([a-zA-Z]\\d))/");
+    assert.equal(regex.toString(), "/.(.*(\\p{L}\\d))/u");
 });
 
 QUnit.test("Test zeroOrMore quantifier", function (assert) {
@@ -348,7 +351,7 @@ QUnit.test("Test zeroOrMore quantifier", function (assert) {
         .letter()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/[a-zA-Z]\\d*[a-zA-Z]/");
+    assert.equal(regex.toString(), "/\\p{L}\\d*\\p{L}/u");
 });
 
 QUnit.test("Test oneOrMore quantifier", function (assert) {
@@ -358,7 +361,7 @@ QUnit.test("Test oneOrMore quantifier", function (assert) {
         .letter()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/[a-zA-Z]\\d+[a-zA-Z]/");
+    assert.equal(regex.toString(), "/\\p{L}\\d+\\p{L}/u");
 });
 
 QUnit.test("Test oneOrNone quantifier", function (assert) {
@@ -368,7 +371,7 @@ QUnit.test("Test oneOrNone quantifier", function (assert) {
         .letter()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/[a-zA-Z]\\d?[a-zA-Z]/");
+    assert.equal(regex.toString(), "/\\p{L}\\d?\\p{L}/u");
 });
 
 QUnit.test("Test exactly() quantifier", function (assert) {
@@ -378,7 +381,7 @@ QUnit.test("Test exactly() quantifier", function (assert) {
         .letter()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/[a-zA-Z]\\d{3}[a-zA-Z]/");
+    assert.equal(regex.toString(), "/\\p{L}\\d{3}\\p{L}/u");
 });
 
 QUnit.test("Test atLeast() quantifier", function (assert) {
@@ -388,7 +391,7 @@ QUnit.test("Test atLeast() quantifier", function (assert) {
         .letter()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/[a-zA-Z]\\d{3,}[a-zA-Z]/");
+    assert.equal(regex.toString(), "/\\p{L}\\d{3,}\\p{L}/u");
 });
 
 QUnit.test("Test noMoreThan() quantifier", function (assert) {
@@ -398,7 +401,7 @@ QUnit.test("Test noMoreThan() quantifier", function (assert) {
         .letter()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/[a-zA-Z]\\d{0,3}[a-zA-Z]/");
+    assert.equal(regex.toString(), "/\\p{L}\\d{0,3}\\p{L}/u");
 });
 
 QUnit.test("Test between() quantifier", function (assert) {
@@ -408,7 +411,7 @@ QUnit.test("Test between() quantifier", function (assert) {
         .letter()
         .buildRegex();
 
-    assert.equal(regex.toString(), "/[a-zA-Z]\\d{2,4}[a-zA-Z]/");
+    assert.equal(regex.toString(), "/\\p{L}\\d{2,4}\\p{L}/u");
 });
 
 QUnit.test("Test MULTI_LINE option", function (assert) {
