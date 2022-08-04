@@ -116,8 +116,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   anyCharacter(quantifier = undefined) {
-    this.#regexString += ".";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart(".", quantifier);
   }
 
   /**
@@ -127,8 +126,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   whitespace(quantifier = undefined) {
-    this.#regexString += "\\s";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("\\s", quantifier);
   }
 
   /**
@@ -138,8 +136,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   nonWhitespace(quantifier = undefined) {
-    this.#regexString += "\\S";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("\\S", quantifier);
   }
 
   /**
@@ -149,8 +146,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   digit(quantifier = undefined) {
-    this.#regexString += "\\d";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("\\d", quantifier);
   }
 
   /**
@@ -160,8 +156,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   nonDigit(quantifier = undefined) {
-    this.#regexString += "\\D";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("\\D", quantifier);
   }
 
   /**
@@ -171,8 +166,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   letter(quantifier = undefined) {
-    this.#regexString += "[a-zA-Z]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[a-zA-Z]", quantifier);
   }
 
   /**
@@ -182,8 +176,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   nonLetter(quantifier = undefined) {
-    this.#regexString += "[^a-zA-Z]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[^a-zA-Z]", quantifier);
   }
 
   /**
@@ -193,8 +186,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   uppercaseLetter(quantifier = undefined) {
-    this.#regexString += "[A-Z]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[A-Z]", quantifier);
   }
 
   /**
@@ -204,8 +196,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   lowercaseLetter(quantifier = undefined) {
-    this.#regexString += "[a-z]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[a-z]", quantifier);
   }
 
   /**
@@ -215,8 +206,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   letterOrDigit(quantifier = undefined) {
-    this.#regexString += "[a-zA-Z0-9]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[a-zA-Z0-9]", quantifier);
   }
 
   /**
@@ -226,8 +216,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   nonLetterOrDigit(quantifier = undefined) {
-    this.#regexString += "[^a-zA-Z0-9]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[^a-zA-Z0-9]", quantifier);
   }
 
   /**
@@ -237,8 +226,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   hexDigit(quantifier = undefined) {
-    this.#regexString += "[0-9A-Fa-f]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[0-9A-Fa-f]", quantifier);
   }
 
   /**
@@ -248,8 +236,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   uppercaseHexDigit(quantifier = undefined) {
-    this.#regexString += "[0-9A-F]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[0-9A-F]", quantifier);
   }
 
   /**
@@ -259,8 +246,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   lowercaseHexDigit(quantifier = undefined) {
-    this.#regexString += "[0-9a-f]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[0-9a-f]", quantifier);
   }
 
   /**
@@ -270,8 +256,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   nonHexDigit(quantifier = undefined) {
-    this.#regexString += "[^0-9A-Fa-f]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[^0-9A-Fa-f]", quantifier);
   }
 
   /**
@@ -281,8 +266,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   wordCharacter(quantifier = undefined) {
-    this.#regexString += "\\w";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("\\w", quantifier);
   }
 
   /**
@@ -293,8 +277,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   nonWordCharacter(quantifier = undefined) {
-    this.#regexString += "\\W";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("\\W", quantifier);
   }
 
   /**
@@ -305,8 +288,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   anyCharacterFrom(characters, quantifier = undefined) {
-    this.#regexString += "[" + RegexBuilder.#makeSafeForCharacterClass(characters) + "]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[" + RegexBuilder.#makeSafeForCharacterClass(characters) + "]", quantifier);
   }
 
   /**
@@ -317,8 +299,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   anyCharacterExcept(characters, quantifier = undefined) {
-    this.#regexString += "[^" + RegexBuilder.#makeSafeForCharacterClass(characters) + "]";
-    return this.#addQuantifier(quantifier);
+    return this.#addPart("[^" + RegexBuilder.#makeSafeForCharacterClass(characters) + "]", quantifier);
   }
 
   /**
@@ -360,8 +341,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   startOfString() {
-    this.#regexString += "^";
-    return this;
+    return this.#addPart("^");
   }
 
   /**
@@ -370,8 +350,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   endOfString() {
-    this.#regexString += "$";
-    return this;
+    return this.#addPart("$");
   }
 
   /**
@@ -381,8 +360,7 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   wordBoundary() {
-    this.#regexString += "\\b";
-    return this;
+    return this.#addPart("\\b");
   }
 
   /**
@@ -397,9 +375,8 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   startGroup() {
-    this.#regexString += "(";
     this.#openGroupCount++;
-    return this;
+    return this.#addPart("(");
   }
 
   /**
@@ -414,9 +391,8 @@ export default class RegexBuilder {
    * @returns {RegexBuilder}
    */
   startNonCapturingGroup() {
-    this.#regexString += "(?:";
     this.#openGroupCount++;
-    return this;
+    return this.#addPart("(?:");
   }
 
   /**
@@ -429,8 +405,12 @@ export default class RegexBuilder {
     if (this.#openGroupCount === 0) {
       throw new Error("Cannot call endGroup() until a group has been started with startGroup()");
     }
-    this.#regexString += ")";
     this.#openGroupCount--;
+    return this.#addPart(")", quantifier);
+  }
+
+  #addPart(part, quantifier = undefined) {
+    this.#regexString += part;
     return this.#addQuantifier(quantifier);
   }
 
