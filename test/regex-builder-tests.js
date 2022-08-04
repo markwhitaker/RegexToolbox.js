@@ -451,6 +451,24 @@ QUnit.test("Test all options", function (assert) {
 
     assert.equal(regex, "/^[cat]/gim");
 });
+
+QUnit.test("Test invalid option", function (assert) {
+    assert.throws(function(){
+        new RegexBuilder()
+            .buildRegex(1);
+    }, new Error("All options passed to constructor must be of type RegexOptions"));
+
+    assert.throws(function(){
+        new RegexBuilder()
+            .buildRegex("i");
+    }, new Error("All options passed to constructor must be of type RegexOptions"));
+
+    assert.throws(function(){
+        new RegexBuilder()
+            .buildRegex(true);
+    }, new Error("All options passed to constructor must be of type RegexOptions"));
+});
+
 QUnit.test("Test non-started group error", function (assert) {
     assert.throws(
         function () {
