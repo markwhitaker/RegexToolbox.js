@@ -348,38 +348,41 @@ QUnit.test("Test wordBoundary()", function (assert) {
 
 QUnit.test("Test single group", function (assert) {
     const regex = new RegexBuilder()
-        .anyCharacter(RegexQuantifier.zeroOrMore)
+        .anyCharacter()
         .group(regex => regex
-            .letter()
-            .digit()
+            .anyCharacter()
+            .whitespace()
         )
+        .anyCharacter()
         .buildRegex();
 
-    assert.equal(regex, "/.*(\\p{L}\\d)/u");
+    assert.equal(regex, "/.(.\\s)./");
 });
 
 QUnit.test("Test non-capturing group", function (assert) {
     const regex = new RegexBuilder()
-        .lowercaseLetter(RegexQuantifier.oneOrMore)
+        .anyCharacter()
         .nonCapturingGroup(regex => regex
-            .digit(RegexQuantifier.oneOrMore)
+            .anyCharacter()
+            .whitespace()
         )
-        .lowercaseLetter(RegexQuantifier.oneOrMore)
+        .anyCharacter()
         .buildRegex();
 
-    assert.equal(regex, "/\\p{Ll}+(?:\\d+)\\p{Ll}+/u");
+    assert.equal(regex, "/.(?:.\\s)./");
 });
 
 QUnit.test("Test named group", function (assert) {
     const regex = new RegexBuilder()
-        .lowercaseLetter(RegexQuantifier.oneOrMore)
+        .anyCharacter()
         .namedGroup("test", regex => regex
-            .digit(RegexQuantifier.oneOrMore)
+            .anyCharacter()
+            .whitespace()
         )
-        .lowercaseLetter(RegexQuantifier.oneOrMore)
+        .anyCharacter()
         .buildRegex();
 
-    assert.equal(regex, "/\\p{Ll}+(?<test>\\d+)\\p{Ll}+/u");
+    assert.equal(regex, "/.(?<test>.\\s)./");
 });
 
 QUnit.test("Test multiple groups", function (assert) {
@@ -388,115 +391,99 @@ QUnit.test("Test multiple groups", function (assert) {
             .anyCharacter(RegexQuantifier.zeroOrMore)
         )
         .group(regex => regex
-            .letter()
             .digit()
         )
         .buildRegex();
 
-    assert.equal(regex, "/(.*)(\\p{L}\\d)/u");
+    assert.equal(regex, "/(.*)(\\d)/");
 });
 
 QUnit.test("Test nested groups", function (assert) {
     const regex = new RegexBuilder()
-        .anyCharacter() // Omit first character from groups
+        .anyCharacter()
         .group(regex1 => regex1
             .anyCharacter(RegexQuantifier.zeroOrMore)
             .group(regex2 => regex2
-                .letter()
                 .digit()
             )
         )
         .buildRegex();
 
-    assert.equal(regex, "/.(.*(\\p{L}\\d))/u");
+    assert.equal(regex, "/.(.*(\\d))/");
 });
 
 QUnit.test("Test zeroOrMore quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .letter()
-        .digit(RegexQuantifier.zeroOrMore)
-        .letter()
+        .anyCharacter(RegexQuantifier.zeroOrMore)
         .buildRegex();
 
-    assert.equal(regex, "/\\p{L}\\d*\\p{L}/u");
+    assert.equal(regex, "/.*/");
 });
 
 QUnit.test("Test oneOrMore quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .letter()
-        .digit(RegexQuantifier.oneOrMore)
-        .letter()
+        .anyCharacter(RegexQuantifier.oneOrMore)
         .buildRegex();
 
-    assert.equal(regex, "/\\p{L}\\d+\\p{L}/u");
+    assert.equal(regex, "/.+/");
 });
 
 QUnit.test("Test oneOrNone quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .letter()
-        .digit(RegexQuantifier.noneOrOne)
-        .letter()
+        .anyCharacter(RegexQuantifier.noneOrOne)
         .buildRegex();
 
-    assert.equal(regex, "/\\p{L}\\d?\\p{L}/u");
+    assert.equal(regex, "/.?/");
 });
 
 QUnit.test("Test exactly() quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .letter()
-        .digit(RegexQuantifier.exactly(3))
-        .letter()
+        .anyCharacter(RegexQuantifier.exactly(3))
         .buildRegex();
 
-    assert.equal(regex, "/\\p{L}\\d{3}\\p{L}/u");
+    assert.equal(regex, "/.{3}/");
 });
 
 QUnit.test("Test atLeast() quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .letter()
-        .digit(RegexQuantifier.atLeast(3))
-        .letter()
+        .anyCharacter(RegexQuantifier.atLeast(3))
         .buildRegex();
 
-    assert.equal(regex, "/\\p{L}\\d{3,}\\p{L}/u");
+    assert.equal(regex, "/.{3,}/");
 });
 
 QUnit.test("Test noMoreThan() quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .letter()
-        .digit(RegexQuantifier.noMoreThan(3))
-        .letter()
+        .anyCharacter(RegexQuantifier.noMoreThan(3))
         .buildRegex();
 
-    assert.equal(regex, "/\\p{L}\\d{0,3}\\p{L}/u");
+    assert.equal(regex, "/.{0,3}/");
 });
 
 QUnit.test("Test between() quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .letter()
-        .digit(RegexQuantifier.between(2, 4))
-        .letter()
+        .anyCharacter(RegexQuantifier.between(2, 4))
         .buildRegex();
 
-    assert.equal(regex, "/\\p{L}\\d{2,4}\\p{L}/u");
+    assert.equal(regex, "/.{2,4}/");
 });
 
 QUnit.test("Test MULTI_LINE option", function (assert) {
     const regex = new RegexBuilder()
         .startOfString()
-        .text("find me!")
+        .anyCharacter()
         .endOfString()
         .buildRegex(RegexOptions.MULTI_LINE);
 
-    assert.equal(regex, "/^find me!$/m");
+    assert.equal(regex, "/^.$/m");
 });
 
 QUnit.test("Test IGNORE_CASE option", function (assert) {
     const regex = new RegexBuilder()
-        .anyCharacterFrom("cat")
+        .anyCharacter()
         .buildRegex(RegexOptions.IGNORE_CASE);
 
-    assert.equal(regex, "/[cat]/i");
+    assert.equal(regex, "/./i");
 });
 
 QUnit.test("Test MATCH_ALL option", function (assert) {
@@ -512,11 +499,10 @@ QUnit.test("Test MATCH_ALL option", function (assert) {
 
 QUnit.test("Test all options", function (assert) {
     const regex = new RegexBuilder()
-        .startOfString()
-        .anyCharacterFrom("cat")
+        .letter()
         .buildRegex([RegexOptions.IGNORE_CASE, RegexOptions.MULTI_LINE, RegexOptions.MATCH_ALL]);
 
-    assert.equal(regex, "/^[cat]/gim");
+    assert.equal(regex, "/\\p{L}/gimu");
 });
 
 QUnit.test("Test invalid option", function (assert) {
@@ -538,58 +524,57 @@ QUnit.test("Test invalid option", function (assert) {
 
 QUnit.test("Test zeroOrMore.butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.zeroOrMore.butAsFewAsPossible)
+        .anyCharacter(RegexQuantifier.zeroOrMore.butAsFewAsPossible)
         .buildRegex();
 
-    assert.equal(regex, "/\\d*?/");
+    assert.equal(regex, "/.*?/");
 });
 
 QUnit.test("Test oneOrMore.butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.oneOrMore.butAsFewAsPossible)
+        .anyCharacter(RegexQuantifier.oneOrMore.butAsFewAsPossible)
         .buildRegex();
 
-    assert.equal(regex, "/\\d+?/");
+    assert.equal(regex, "/.+?/");
 });
 
 QUnit.test("Test atLeast().butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.atLeast(1).butAsFewAsPossible)
+        .anyCharacter(RegexQuantifier.atLeast(1).butAsFewAsPossible)
         .buildRegex();
 
-    assert.equal(regex, "/\\d{1,}?/");
+    assert.equal(regex, "/.{1,}?/");
 });
 
 QUnit.test("Test between().butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.between(2, 100).butAsFewAsPossible)
+        .anyCharacter(RegexQuantifier.between(2, 100).butAsFewAsPossible)
         .buildRegex();
 
-    assert.equal(regex, "/\\d{2,100}?/");
+    assert.equal(regex, "/.{2,100}?/");
 });
 
 QUnit.test("Test noMoreThan().butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.noMoreThan(2).butAsFewAsPossible)
+        .anyCharacter(RegexQuantifier.noMoreThan(2).butAsFewAsPossible)
         .buildRegex();
 
-    assert.equal(regex, "/\\d{0,2}?/");
+    assert.equal(regex, "/.{0,2}?/");
 });
 
 QUnit.test("Test noneOrOne.butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.noneOrOne.butAsFewAsPossible)
+        .anyCharacter(RegexQuantifier.noneOrOne.butAsFewAsPossible)
         .buildRegex();
 
-    assert.equal(regex, "/\\d??/");
+    assert.equal(regex, "/.??/");
 });
 
 QUnit.test("Test exactly().butAsFewAsPossible quantifier error", function (assert) {
     assert.throws(
         function () {
             new RegexBuilder()
-                .digit(RegexQuantifier.exactly(1).butAsFewAsPossible)
-                .buildRegex();
+                .anyCharacter(RegexQuantifier.exactly(1).butAsFewAsPossible);
         },
         new Error("butAsFewAsPossible can't be called on this quantifier")
     );
@@ -599,8 +584,7 @@ QUnit.test("Test butAsFewAsPossible.butAsFewAsPossible error ", function (assert
     assert.throws(
         function () {
             new RegexBuilder()
-                .digit(RegexQuantifier.oneOrMore.butAsFewAsPossible.butAsFewAsPossible)
-                .buildRegex();
+                .anyCharacter(RegexQuantifier.oneOrMore.butAsFewAsPossible.butAsFewAsPossible);
         },
         new Error("butAsFewAsPossible can't be called on this quantifier")
     );
