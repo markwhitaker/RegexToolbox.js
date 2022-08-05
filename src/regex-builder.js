@@ -16,7 +16,6 @@ import RegexQuantifier from "./regex-quantifier.js";
  * @constructor
  */
 export default class RegexBuilder {
-  #openGroupCount = 0;
   #regexString = "";
   #flags = new Set();
 
@@ -28,13 +27,6 @@ export default class RegexBuilder {
    * @returns {RegExp}
    */
   buildRegex(options = undefined) {
-    if (this.#openGroupCount === 1) {
-      throw new Error("One group is still open");
-    }
-    if (this.#openGroupCount > 1) {
-      throw new Error(this.#openGroupCount + " groups are still open");
-    }
-
     if (options) {
       if (!(options instanceof Array)) {
         options = [options];
@@ -104,9 +96,9 @@ export default class RegexBuilder {
     }
 
     return this
-        .startNonCapturingGroup()
+        .#startNonCapturingGroup()
         .regexText(text, undefined)
-        .endGroup(quantifier);
+        .#endGroup(quantifier);
   }
 
   /**
@@ -377,7 +369,7 @@ export default class RegexBuilder {
     }
     if (textArray.length > 1) {
       return this
-          .startNonCapturingGroup()
+          .#startNonCapturingGroup()
           .regexText(textArray
               .map(function (t) {
                 return RegexBuilder.#makeSafeForRegex(t);
@@ -385,7 +377,7 @@ export default class RegexBuilder {
               .join("|"),
               undefined
           )
-          .endGroup(quantifier);
+          .#endGroup(quantifier);
     }
 
     return this;
@@ -420,34 +412,67 @@ export default class RegexBuilder {
   }
 
   /**
-   * Start a capture group. Capture groups have two purposes: they group part of the expression so it can have
+   * Add a capture group. Capture groups have two purposes: they group part of the expression so it can have
    * quantifiers applied to it, and they capture the results of each group match and allow you to access them
    * afterwards by indexing into the object returned by RegExp.exec().
    *
-   * If you don't want to capture the group match, use startNonCapturingGroup().
+   * If you don't want to capture the group match, use nonCapturingGroup().
    *
-   * Note: all groups must be ended with endGroup() before calling buildRegex().
-   *
+   * @param steps       A function passing a RegexBuilder object used to build the regex inside the group
+   * @param quantifier  (Optional) Quantifier to apply to the group
    * @returns {RegexBuilder}
    */
-  startGroup() {
-    this.#openGroupCount++;
-    return this.#addPart("(");
+  group(steps, quantifier = undefined) {
+    if (!steps instanceof Function) {
+      throw new Error("The steps argument must be a function");
+    }
+    this.#addPart("(");
+    steps(this);
+    return this.#endGroup(quantifier);
   }
 
   /**
-   * Start a non-capturing group. Non-capturing groups group part of the expression so it can have quantifiers applied
-   * to it, but do not capture the results of each group match, meaning you can't access them afterwards by indexing
-   * into the object returned by RegExp.exec().
+   * Add a named capture group. This works the same as group() but the captured group can be referenced by name from the
+   * object returned by RegExp.exec(), e.g.
    *
-   * If you want to capture the group match, use startGroup().
+   * const regex = new RegexBuilder()
+   *     .namedGroup("firstName", g => g.letter(RegexQuantifier.oneOrMore)
+   *     .buildRegex();
+   * const name = regex.exec(input).groups.firstName;
    *
-   * Note: all groups must be ended with endGroup() before calling buildRegex().
+   * @param name        Name this group will be retrieved by
+   * @param steps       A function passing a RegexBuilder object used to build the regex inside the group
+   * @param quantifier  (Optional) Quantifier to apply to the group
+   * @returns {RegexBuilder}
+   */
+  namedGroup(name, steps, quantifier = undefined) {
+    if (!steps instanceof Function) {
+      throw new Error("The steps argument must be a function");
+    }
+    this.#addPart("(?<" + name + ">");
+    steps(this);
+    return this.#endGroup(quantifier);
+  }
+
+  /**
+   * Add a non-capturing group. Non-capturing groups group part of the expression so it can have quantifiers applied
+   * to it, but do not capture the results of each group match, meaning you can't access them afterwards using the
+   * object returned by RegExp.exec().
+   *
+   * If you want to capture the group match, use startGroup() or startNamedGroup().
    *
    * @returns {RegexBuilder}
    */
-  startNonCapturingGroup() {
-    this.#openGroupCount++;
+  nonCapturingGroup(steps, quantifier = undefined) {
+    if (!steps instanceof Function) {
+      throw new Error("First argument must be a function");
+    }
+    this.#addPart("(?:");
+    steps(this);
+    return this.#endGroup(quantifier);
+  }
+
+  #startNonCapturingGroup() {
     return this.#addPart("(?:");
   }
 
@@ -457,11 +482,7 @@ export default class RegexBuilder {
    * @param quantifier    (Optional) Quantifier to apply to this group
    * @returns {RegexBuilder}
    */
-  endGroup(quantifier = undefined) {
-    if (this.#openGroupCount === 0) {
-      throw new Error("Cannot call endGroup() until a group has been started with startGroup()");
-    }
-    this.#openGroupCount--;
+  #endGroup(quantifier = undefined) {
     return this.#addPart(")", quantifier);
   }
 

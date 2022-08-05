@@ -349,10 +349,10 @@ QUnit.test("Test wordBoundary()", function (assert) {
 QUnit.test("Test single group", function (assert) {
     const regex = new RegexBuilder()
         .anyCharacter(RegexQuantifier.zeroOrMore)
-        .startGroup()
-        .letter()
-        .digit()
-        .endGroup()
+        .group(regex => regex
+            .letter()
+            .digit()
+        )
         .buildRegex();
 
     assert.equal(regex, "/.*(\\p{L}\\d)/u");
@@ -361,24 +361,36 @@ QUnit.test("Test single group", function (assert) {
 QUnit.test("Test non-capturing group", function (assert) {
     const regex = new RegexBuilder()
         .lowercaseLetter(RegexQuantifier.oneOrMore)
-        .startNonCapturingGroup()
-        .digit(RegexQuantifier.oneOrMore)
-        .endGroup()
+        .nonCapturingGroup(regex => regex
+            .digit(RegexQuantifier.oneOrMore)
+        )
         .lowercaseLetter(RegexQuantifier.oneOrMore)
         .buildRegex();
 
     assert.equal(regex, "/\\p{Ll}+(?:\\d+)\\p{Ll}+/u");
 });
 
+QUnit.test("Test named group", function (assert) {
+    const regex = new RegexBuilder()
+        .lowercaseLetter(RegexQuantifier.oneOrMore)
+        .namedGroup("test", regex => regex
+            .digit(RegexQuantifier.oneOrMore)
+        )
+        .lowercaseLetter(RegexQuantifier.oneOrMore)
+        .buildRegex();
+
+    assert.equal(regex, "/\\p{Ll}+(?<test>\\d+)\\p{Ll}+/u");
+});
+
 QUnit.test("Test multiple groups", function (assert) {
     const regex = new RegexBuilder()
-        .startGroup()
-        .anyCharacter(RegexQuantifier.zeroOrMore)
-        .endGroup()
-        .startGroup()
-        .letter()
-        .digit()
-        .endGroup()
+        .group(regex => regex
+            .anyCharacter(RegexQuantifier.zeroOrMore)
+        )
+        .group(regex => regex
+            .letter()
+            .digit()
+        )
         .buildRegex();
 
     assert.equal(regex, "/(.*)(\\p{L}\\d)/u");
@@ -387,13 +399,13 @@ QUnit.test("Test multiple groups", function (assert) {
 QUnit.test("Test nested groups", function (assert) {
     const regex = new RegexBuilder()
         .anyCharacter() // Omit first character from groups
-        .startGroup()
-        .anyCharacter(RegexQuantifier.zeroOrMore)
-        .startGroup()
-        .letter()
-        .digit()
-        .endGroup()
-        .endGroup()
+        .group(regex1 => regex1
+            .anyCharacter(RegexQuantifier.zeroOrMore)
+            .group(regex2 => regex2
+                .letter()
+                .digit()
+            )
+        )
         .buildRegex();
 
     assert.equal(regex, "/.(.*(\\p{L}\\d))/u");
@@ -522,55 +534,6 @@ QUnit.test("Test invalid option", function (assert) {
         new RegexBuilder()
             .buildRegex(true);
     }, new Error("All options passed to constructor must be of type RegexOptions"));
-});
-
-QUnit.test("Test non-started group error", function (assert) {
-    assert.throws(
-        function () {
-            new RegexBuilder()
-                .endGroup()
-                .buildRegex();
-        },
-        new Error("Cannot call endGroup() until a group has been started with startGroup()")
-    );
-});
-
-QUnit.test("Test non-ended group error (1)", function (assert) {
-    assert.throws(
-        function () {
-            new RegexBuilder()
-                .startGroup()
-                .buildRegex();
-        },
-        new Error("One group is still open")
-    );
-});
-
-QUnit.test("Test non-ended group error (2)", function (assert) {
-    assert.throws(
-        function () {
-            new RegexBuilder()
-                .startGroup()
-                .startGroup()
-                .endGroup()
-                .buildRegex();
-
-        },
-        new Error("One group is still open")
-    );
-});
-
-QUnit.test("Test multiple non-ended groups error", function (assert) {
-    assert.throws(
-        function () {
-            new RegexBuilder()
-                .startGroup()
-                .startGroup()
-                .buildRegex();
-
-        },
-        new Error("2 groups are still open")
-    );
 });
 
 QUnit.test("Test zeroOrMore.butAsFewAsPossible() quantifier", function (assert) {
