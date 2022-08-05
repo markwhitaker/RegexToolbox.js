@@ -359,6 +359,20 @@ QUnit.test("Test single group", function (assert) {
     assert.equal(regex, "/.(.\\s)./");
 });
 
+QUnit.test("Test single group with quantifier", function (assert) {
+    const regex = new RegexBuilder()
+        .anyCharacter()
+        .group(regex => regex
+            .anyCharacter()
+            .whitespace(),
+            RegexQuantifier.oneOrMore
+        )
+        .anyCharacter()
+        .buildRegex();
+
+    assert.equal(regex, "/.(.\\s)+./");
+});
+
 QUnit.test("Test non-capturing group", function (assert) {
     const regex = new RegexBuilder()
         .anyCharacter()
@@ -372,6 +386,20 @@ QUnit.test("Test non-capturing group", function (assert) {
     assert.equal(regex, "/.(?:.\\s)./");
 });
 
+QUnit.test("Test non-capturing group with quantifier", function (assert) {
+    const regex = new RegexBuilder()
+        .anyCharacter()
+        .nonCapturingGroup(regex => regex
+            .anyCharacter()
+            .whitespace(),
+            RegexQuantifier.oneOrMore
+        )
+        .anyCharacter()
+        .buildRegex();
+
+    assert.equal(regex, "/.(?:.\\s)+./");
+});
+
 QUnit.test("Test named group", function (assert) {
     const regex = new RegexBuilder()
         .anyCharacter()
@@ -383,6 +411,20 @@ QUnit.test("Test named group", function (assert) {
         .buildRegex();
 
     assert.equal(regex, "/.(?<test>.\\s)./");
+});
+
+QUnit.test("Test named group with quantifier", function (assert) {
+    const regex = new RegexBuilder()
+        .anyCharacter()
+        .namedGroup("test", regex => regex
+            .anyCharacter()
+            .whitespace(),
+            RegexQuantifier.oneOrMore
+        )
+        .anyCharacter()
+        .buildRegex();
+
+    assert.equal(regex, "/.(?<test>.\\s)+./");
 });
 
 QUnit.test("Test multiple groups", function (assert) {
