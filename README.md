@@ -20,6 +20,85 @@ npm i regextoolbox
 
 It is fully documented in the [project wiki](https://github.com/markwhitaker/RegexToolbox.JS/wiki).
 
+## ⚠️ Breaking changes in 2.0
+
+### Improved group syntax
+
+The grouping methods have been totally overhauled in version 2.0 to make them easier to use and less error-prone.
+
+Go from this:
+
+```javascript
+const regex = new RegexBuilder()
+    .startGroup()
+    .digit()
+    .letter()
+    .buildRegex(); // ERROR: forgot to call endGroup()
+```
+
+To this:
+
+```javascript
+const regex = new RegexBuilder()
+    .group(r => r
+        .digit()
+        .letter()
+    )
+    .buildRegex();
+```
+
+Details of breaking changes:
+
+| Removed                                   | Replaced with         |
+|-------------------------------------------|-----------------------|
+| `startGroup() ... endGroup()`             | `group()`             |
+| `startNonCapturingGroup() ... endGroup()` | `nonCapturingGroup()` |
+
+### `butAsFewAsPossible` is now a getter
+
+Go from this:
+
+```javascript
+RegexQuantifier.oneOrMore.butAsFewAsPossible()
+```
+
+to this:
+
+```javascript
+RegexQuantifier.oneOrMore.butAsFewAsPossible
+```
+
+## Also new in 2.0
+
+### Support for named groups
+
+Support for named groups has been added. Where the captured values for regular groups are retrieved like this:
+
+```javascript
+const regex = new RegexBuilder()
+    .group(r => r
+        .uppercaseLetter()
+    )
+    .lowercaseLetter(RegexQuantifier.oneOrMore)
+    .buildRegex();
+
+const initial = regex.exec("Mark")[1]; // "M"
+```
+
+the captured values for named groups are retrieved like this:
+
+```javascript
+// Get a number using a group of digits
+const regex = new RegexBuilder()
+    .namedGroup("initialLetter", r => r
+        .uppercaseLetter()
+    )
+    .lowercaseLetter(RegexQuantifier.oneOrMore)
+    .buildRegex();
+
+const initial = regex.exec(input).groups.initialLetter; // "M"
+```
+
 ## Also for JavaScript developers
 
 ![icon](https://raw.githubusercontent.com/markwhitaker/MimeTypes.JS/main/artwork/MimeTypes-icon-32.png) [MimeTypes.JS](https://github.com/markwhitaker/MimeTypes.JS): MIME type constants for your JavaScript projects
