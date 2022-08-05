@@ -1,6 +1,6 @@
 ![icon](artwork/RegexToolbox-icon-100.png)
 
-# RegexToolbox.JS [![CircleCI](https://img.shields.io/circleci/build/gh/markwhitaker/RegexToolbox.JS)](https://circleci.com/gh/markwhitaker/RegexToolbox.JS) [![npm](https://img.shields.io/npm/v/regextoolbox)](https://www.npmjs.com/package/regextoolbox) [![npm](https://img.shields.io/npm/dw/regextoolbox)](https://www.npmjs.com/package/regextoolbox)
+# RegexToolbox.js [![CircleCI](https://img.shields.io/circleci/build/gh/markwhitaker/RegexToolbox.JS)](https://circleci.com/gh/markwhitaker/RegexToolbox.JS) [![npm](https://img.shields.io/npm/v/regextoolbox)](https://www.npmjs.com/package/regextoolbox) [![npm](https://img.shields.io/npm/dw/regextoolbox)](https://www.npmjs.com/package/regextoolbox)
 
 Regular expression tools for JavaScript developers.
 
@@ -101,7 +101,7 @@ const initial = regex.exec(input).groups.initialLetter; // "M"
 
 ## Also for JavaScript developers
 
-![icon](https://raw.githubusercontent.com/markwhitaker/MimeTypes.JS/main/artwork/MimeTypes-icon-32.png) [MimeTypes.JS](https://github.com/markwhitaker/MimeTypes.JS): MIME type constants for your JavaScript projects
+![icon](https://raw.githubusercontent.com/markwhitaker/MimeTypes.js/main/artwork/MimeTypes-icon-32.png) [MimeTypes.js](https://github.com/markwhitaker/MimeTypes.js): MIME type constants for your JavaScript projects
 
 ## RegexToolbox for other languages
 
