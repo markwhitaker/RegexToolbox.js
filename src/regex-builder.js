@@ -95,10 +95,9 @@ export default class RegexBuilder {
       return this;
     }
 
-    return this
-        .#startNonCapturingGroup()
-        .regexText(text, undefined)
-        .#endGroup(quantifier);
+    return this.nonCapturingGroup(r => r
+        .regexText(text, undefined),
+        quantifier);
   }
 
   /**
@@ -369,15 +368,12 @@ export default class RegexBuilder {
     }
     if (textArray.length > 1) {
       return this
-          .#startNonCapturingGroup()
-          .regexText(textArray
-              .map(function (t) {
-                return RegexBuilder.#makeSafeForRegex(t);
-              })
-              .join("|"),
-              undefined
-          )
-          .#endGroup(quantifier);
+          .nonCapturingGroup(r => r
+              .regexText(textArray
+                      .map(t => RegexBuilder.#makeSafeForRegex(t))
+                      .join("|"),
+                  undefined
+              ), quantifier);
     }
 
     return this;
@@ -467,21 +463,11 @@ export default class RegexBuilder {
     if (!steps instanceof Function) {
       throw new Error("First argument must be a function");
     }
-    this.#startNonCapturingGroup();
+    this.#addPart("(?:");
     steps(this);
     return this.#endGroup(quantifier);
   }
 
-  #startNonCapturingGroup() {
-    return this.#addPart("(?:");
-  }
-
-  /**
-   * End the innermost group previously started with startGroup() or startNonCapturingGroup().
-   *
-   * @param quantifier    (Optional) Quantifier to apply to this group
-   * @returns {RegexBuilder}
-   */
   #endGroup(quantifier = undefined) {
     return this.#addPart(")", quantifier);
   }
