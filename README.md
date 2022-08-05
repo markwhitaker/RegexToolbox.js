@@ -20,6 +20,10 @@ npm i regextoolbox
 
 It is fully documented in the [project wiki](https://github.com/markwhitaker/RegexToolbox.JS/wiki).
 
+## Also for JavaScript developers
+
+![icon](https://raw.githubusercontent.com/markwhitaker/MimeTypes.JS/main/artwork/MimeTypes-icon-32.png) [MimeTypes.JS](https://github.com/markwhitaker/MimeTypes.JS): MIME type constants for your JavaScript projects
+
 ## RegexToolbox for other languages
 
 ![icon](https://raw.githubusercontent.com/markwhitaker/RegexToolbox.NET/master/Artwork/RegexToolbox-icon-32.png) [RegexToolbox for .NET](https://github.com/markwhitaker/RegexToolbox.NET)
