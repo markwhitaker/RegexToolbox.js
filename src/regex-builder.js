@@ -467,7 +467,7 @@ export default class RegexBuilder {
     if (!steps instanceof Function) {
       throw new Error("First argument must be a function");
     }
-    this.#addPart("(?:");
+    this.#startNonCapturingGroup();
     steps(this);
     return this.#endGroup(quantifier);
   }
