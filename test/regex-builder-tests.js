@@ -522,10 +522,12 @@ QUnit.test("Test MULTI_LINE option", function (assert) {
 
 QUnit.test("Test IGNORE_CASE option", function (assert) {
     const regex = new RegexBuilder()
-        .anyCharacter()
+        .uppercaseLetter()
         .buildRegex(RegexOptions.IGNORE_CASE);
 
-    assert.equal(regex, "/./i");
+    assert.equal(regex, "/\\p{Lu}/iu");
+    assert.true(regex.test("a"));
+    assert.true(regex.test("A"));
 });
 
 QUnit.test("Test MATCH_ALL option", function (assert) {
@@ -637,6 +639,16 @@ QUnit.test("Test text not string error", function (assert) {
         function () {
             new RegexBuilder()
                 .text(true);
+        },
+        new Error("text must be a string")
+    );
+});
+
+QUnit.test("Test regex text not string error", function (assert) {
+    assert.throws(
+        function () {
+            new RegexBuilder()
+                .regexText(true);
         },
         new Error("text must be a string")
     );
