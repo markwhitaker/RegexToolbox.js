@@ -13,9 +13,9 @@ export default class RegexQuantifier {
         this.#isGreedy = isGreedy;
     }
 
-    butAsFewAsPossible() {
+    get butAsFewAsPossible() {
         if (!this.#isGreedy) {
-            throw new Error("butAsFewAsPossible() can't be called on this quantifier")
+            throw new Error("butAsFewAsPossible can't be called on this quantifier")
         }
         return new RegexQuantifier(this.#regexString + "?", false, RegexQuantifier.#privateToken);
     }

@@ -536,73 +536,73 @@ QUnit.test("Test invalid option", function (assert) {
     }, new Error("All options passed to constructor must be of type RegexOptions"));
 });
 
-QUnit.test("Test zeroOrMore.butAsFewAsPossible() quantifier", function (assert) {
+QUnit.test("Test zeroOrMore.butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.zeroOrMore.butAsFewAsPossible())
+        .digit(RegexQuantifier.zeroOrMore.butAsFewAsPossible)
         .buildRegex();
 
     assert.equal(regex, "/\\d*?/");
 });
 
-QUnit.test("Test oneOrMore.butAsFewAsPossible() quantifier", function (assert) {
+QUnit.test("Test oneOrMore.butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.oneOrMore.butAsFewAsPossible())
+        .digit(RegexQuantifier.oneOrMore.butAsFewAsPossible)
         .buildRegex();
 
     assert.equal(regex, "/\\d+?/");
 });
 
-QUnit.test("Test atLeast().butAsFewAsPossible() quantifier", function (assert) {
+QUnit.test("Test atLeast().butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.atLeast(1).butAsFewAsPossible())
+        .digit(RegexQuantifier.atLeast(1).butAsFewAsPossible)
         .buildRegex();
 
     assert.equal(regex, "/\\d{1,}?/");
 });
 
-QUnit.test("Test between().butAsFewAsPossible() quantifier", function (assert) {
+QUnit.test("Test between().butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.between(2, 100).butAsFewAsPossible())
+        .digit(RegexQuantifier.between(2, 100).butAsFewAsPossible)
         .buildRegex();
 
     assert.equal(regex, "/\\d{2,100}?/");
 });
 
-QUnit.test("Test noMoreThan().butAsFewAsPossible() quantifier", function (assert) {
+QUnit.test("Test noMoreThan().butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.noMoreThan(2).butAsFewAsPossible())
+        .digit(RegexQuantifier.noMoreThan(2).butAsFewAsPossible)
         .buildRegex();
 
     assert.equal(regex, "/\\d{0,2}?/");
 });
 
-QUnit.test("Test noneOrOne.butAsFewAsPossible() quantifier", function (assert) {
+QUnit.test("Test noneOrOne.butAsFewAsPossible quantifier", function (assert) {
     const regex = new RegexBuilder()
-        .digit(RegexQuantifier.noneOrOne.butAsFewAsPossible())
+        .digit(RegexQuantifier.noneOrOne.butAsFewAsPossible)
         .buildRegex();
 
     assert.equal(regex, "/\\d??/");
 });
 
-QUnit.test("Test exactly().butAsFewAsPossible() quantifier error", function (assert) {
+QUnit.test("Test exactly().butAsFewAsPossible quantifier error", function (assert) {
     assert.throws(
         function () {
             new RegexBuilder()
-                .digit(RegexQuantifier.exactly(1).butAsFewAsPossible())
+                .digit(RegexQuantifier.exactly(1).butAsFewAsPossible)
                 .buildRegex();
         },
-        new Error("butAsFewAsPossible() can't be called on this quantifier")
+        new Error("butAsFewAsPossible can't be called on this quantifier")
     );
 });
 
-QUnit.test("Test butAsFewAsPossible().butAsFewAsPossible() error ", function (assert) {
+QUnit.test("Test butAsFewAsPossible.butAsFewAsPossible error ", function (assert) {
     assert.throws(
         function () {
             new RegexBuilder()
-                .digit(RegexQuantifier.oneOrMore.butAsFewAsPossible().butAsFewAsPossible())
+                .digit(RegexQuantifier.oneOrMore.butAsFewAsPossible.butAsFewAsPossible)
                 .buildRegex();
         },
-        new Error("butAsFewAsPossible() can't be called on this quantifier")
+        new Error("butAsFewAsPossible can't be called on this quantifier")
     );
 });
 
