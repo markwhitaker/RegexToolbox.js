@@ -1,5 +1,3 @@
-"use strict";
-
 import {RegexOptions} from "../index.js";
 
 QUnit.module("RegexOptions");
