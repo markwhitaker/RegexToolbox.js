@@ -1,5 +1,3 @@
-"use strict";
-
 export default class RegexQuantifier {
     static #privateToken = {}
     #regexString = ""

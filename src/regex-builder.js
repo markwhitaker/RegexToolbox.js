@@ -1,5 +1,3 @@
-"use strict";
-
 import RegexOptions from "./regex-options.js";
 import RegexQuantifier from "./regex-quantifier.js";
 

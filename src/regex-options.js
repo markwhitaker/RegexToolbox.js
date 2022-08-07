@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Options that can be passed to RegexBuilder.buildRegex()
  */
