@@ -1,0 +1,10 @@
+name: Build, test and publish release
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish-to-nuget:
+    name: Publish release to npm
+    uses: markwhitaker/shared-workflows/.github/workflows/node-publish-to-npm.yml@main
+    secrets: inherit
