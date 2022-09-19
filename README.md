@@ -1,6 +1,6 @@
 ![icon](artwork/RegexToolbox-icon-100.png)
 
-# RegexToolbox.js [![Build and test](https://github.com/markwhitaker/RegexToolbox.js/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/markwhitaker/RegexToolbox.js/actions/workflows/build-and-test.yml) [![npm](https://img.shields.io/npm/v/regextoolbox)](https://www.npmjs.com/package/regextoolbox) [![npm](https://img.shields.io/npm/dw/regextoolbox)](https://www.npmjs.com/package/regextoolbox)
+# RegexToolbox.js [![Build and test](https://github.com/markwhitaker/RegexToolbox.js/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/markwhitaker/RegexToolbox.js/actions/workflows/build-and-test.yml) [![Publish to npm](https://github.com/markwhitaker/RegexToolbox.js/actions/workflows/publish-to-npm.yml/badge.svg)](https://github.com/markwhitaker/RegexToolbox.js/actions/workflows/publish-to-npm.yml) [![npm](https://img.shields.io/npm/v/regextoolbox)](https://www.npmjs.com/package/regextoolbox) [![npm](https://img.shields.io/npm/dw/regextoolbox)](https://www.npmjs.com/package/regextoolbox)
 
 Regular expression tools for JavaScript developers.
 
