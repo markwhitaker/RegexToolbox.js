@@ -37,9 +37,8 @@ export default class RegexBuilder {
           .forEach(str => this.#flags.add(str));
     }
 
-    let flagsStr = "";
-    this.#flags.forEach(flagStr => flagsStr += flagStr);
-    const regex = new RegExp(this.#regexString, flagsStr);
+    const flagsString = [...this.#flags].reduce((flags, flag) => flags + flag, "");
+    const regex = new RegExp(this.#regexString, flagsString);
     this.#regexString = "";
     this.#flags.clear();
     return regex;
