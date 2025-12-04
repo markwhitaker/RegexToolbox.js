@@ -1,3 +1,4 @@
+import QUnit from "qunit";
 import {RegexOptions, RegexQuantifier, RegexBuilder} from "../index.js";
 
 QUnit.module("RegexBuilder");

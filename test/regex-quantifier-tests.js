@@ -1,3 +1,4 @@
+import QUnit from "qunit";
 import {RegexQuantifier} from "../index.js";
 
 QUnit.module("RegexQuantifier");
