@@ -8,4 +8,10 @@ on:
 jobs:
   build-and-test:
     name: Build and test
-    uses: markwhitaker/shared-workflows/.github/workflows/node-build-and-test.yml@main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun test

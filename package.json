@@ -17,9 +17,6 @@
     "pattern matching"
   ],
   "scripts": {
-    "test": "qunit"
-  },
-  "devDependencies": {
-    "qunit": "^2.19.1"
+    "test": "bun test"
   }
 }
