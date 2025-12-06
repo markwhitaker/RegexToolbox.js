@@ -3,8 +3,10 @@ on:
   release:
     types: [published]
 
+permissions:
+  id-token: write
+
 jobs:
   publish-to-nuget:
     name: Publish release to npm
     uses: markwhitaker/shared-workflows/.github/workflows/node-publish-to-npm.yml@main
-    secrets: inherit
